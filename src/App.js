@@ -1,23 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+// App.js
+import { useEffect, useState } from "react";
+import Router from "./routes/Router";
+import Sidebar from "./components/SideBar/Sidebar";
 
 function App() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem("fuwari-user");
+    if (savedUser) setUser(JSON.parse(savedUser));
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="flex h-screen">
+      <Sidebar user={user} setUser={setUser} />
+      <div className="flex-1 relative bg-gray-50">
+        <Router user={user} setUser={setUser} />
+      </div>
     </div>
   );
 }
