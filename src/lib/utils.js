@@ -1,7 +1,6 @@
 export function cn(...classes) {
   return classes.filter(Boolean).join(" ");
 }
-
 export function getDatesInRange(startDate, endDate) {
   const start = new Date(startDate);
   const end = new Date(endDate);
@@ -15,3 +14,4 @@ export function getDatesInRange(startDate, endDate) {
 
   return dates;
 }
+

@@ -1,3 +1,4 @@
+
 const LoginPage = () => {
   const handleLogin = () => {
     window.location.href = "http://localhost:8080/oauth2/authorization/google";
@@ -13,7 +14,6 @@ const LoginPage = () => {
         >
           Google로 로그인하기
         </button>
-
       </div>
     </div>
   );

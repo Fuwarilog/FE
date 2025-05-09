@@ -1,3 +1,4 @@
+
 const MainLayout = ({ children }) => {
  return (
     <div className="min-h-screen flex bg-white text-gray-700 font-pretendard">
@@ -6,10 +7,10 @@ const MainLayout = ({ children }) => {
         <div className="max-w-5xl mx-auto">
           {children}
         </div>
+
       </main>
     </div>
   );
 };
-
 
 export default MainLayout;

@@ -27,6 +27,7 @@ export default function Sidebar({ user, setUser }) {
       </div>
 
       {/* 모든 버튼 포함 그룹: 메뉴 + 로그인/로그아웃 포함 */}
+
       <div className="font-pretendard flex flex-col w-full gap-4">
         <Link to="/">
           <Button variant="outline" className="w-full justify-start px-4 py-6 text-base">
@@ -39,7 +40,9 @@ export default function Sidebar({ user, setUser }) {
           </Button>
         </Link>
         <Link to="/diary">
+
           <Button variant="outline" className="w-full justify-start px-4 py-6 text-base">
+
             📓 다이어리
           </Button>
         </Link>

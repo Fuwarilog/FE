@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { mockUser } from "../data/sample";
 
+
 export default function Mypage() {
   const [userInfo, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -38,6 +39,7 @@ export default function Mypage() {
   return (
     <div className="p-8">
       <h2 className="text-xl font-pretendard font-bold mb-4">내 정보</h2>
+
       <div className="flex items-center gap-4">
         <img
           src={userInfo.picture || "/profile.png"}

@@ -74,3 +74,4 @@ export default function DayCard({ trip }) {
     </Card>
   );
 }
+
