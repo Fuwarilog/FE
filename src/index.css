@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* 아래는 원래 있던 기본 스타일 - 유지해도 OK */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.rdp {
+  display: block !important;
+}
+
+.rdp-months {
+  display: grid !important;
+  grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+}
+
+.rdp-row {
+  display: flex !important;
+  justify-content: center !important;
+}
+
+@import "react-day-picker/dist/style.css";
+
+
+/* FullCalendar 범위 안에서만 작동하게! */
+.calendar-wrapper .fc-button.fc-today-button {
+  background-color: #e0e7ff !important;
+  color: #4338ca !important;
+  border: none;
+  border-radius: 9999px !important;
+  padding: 0.4rem 0.8rem !important;
+  font-family: 'Pretendard' !important;
+}
+
+.calendar-wrapper .fc-button.fc-prev-button,
+.calendar-wrapper .fc-button.fc-next-button {
+  background-color: #f0f5ff;
+  color: #4f46e5;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.4rem 0.8rem;
+  font-family: 'Pretendard', sans-serif;
+}
+
+.calendar-wrapper .fc-button:hover {
+  background-color: #dbeafe;
+  cursor: pointer;
+}
+
+

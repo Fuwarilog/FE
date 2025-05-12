@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "name": "fuwari",
+  "cwd": ".",
+  "path": "./src/components",
+  "ui": "default",
+  "style": "default",
+  "rsc": false,
+  "tsx": false,
+  "typescript": false,
+  "framework": "react",
+  "tailwind": {
+    "config": "tailwind.config.js",
+    "css": "src/index.css",
+    "baseColor": "zinc",
+    "cssVariables": true,
+    "radius": "default"
+  },
+  "aliases": {
+    "components": "../components",
+    "lib": "../lib"
+  },
+  "utils": "src/lib/utils.js"
+}
