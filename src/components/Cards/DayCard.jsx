@@ -13,7 +13,7 @@ export default function DayCard({ trip }) {
   return (
     <Card className="p-5 rounded-2xl bg-white/80 shadow-md border border-blue-100">
       <CardHeader className="pb-3">
-        <CardTitle className="text-base font-bold font-pretendard text-indigo-500 flex items-center gap-2">
+        <CardTitle className="text-[23px] font-bold font-gangwon text-indigo-500 flex items-center gap-2">
           📓 {trip.title}
         </CardTitle>
       </CardHeader>
@@ -47,8 +47,8 @@ export default function DayCard({ trip }) {
                       : "bg-gray-100"
                   }`}
                 >
-                  <span className="font-medium font-pretendard text-gray-800">{i + 1}일차 기록</span>
-                  <span className="text-sm font-pretendard text-gray-500">
+                  <span className="font-medium text-lg font-gangwon text-gray-800">{i + 1}일차 기록</span>
+                  <span className="text-sm font-gangwon text-gray-500">
                     {format(addDays(start, i), "yyyy.MM.dd")}
                   </span>
                 </div>
@@ -61,7 +61,7 @@ export default function DayCard({ trip }) {
                         state: { tripTitle: trip.title, date: currentDate, dayIndex: i + 1 },
                       })
                     }
-                    className="ml-1 px-3 py-1 text-xs font-pretendard rounded-full bg-indigo-300 text-white hover:bg-purple-400 shadow-sm"
+                    className="ml-1 px-3 py-1 text-base font-gangwon rounded-full bg-indigo-300 text-white hover:bg-purple-400 shadow-sm"
                   >
                     작성하기
                   </button>

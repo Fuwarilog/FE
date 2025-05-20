@@ -11,7 +11,7 @@ export default function AuthLayout({ children, user }) {
             alt="프로필"
             className="w-8 h-8 rounded-full object-cover border"
           />
-          <span className="mt-1 text-xs font-pretendard font-medium">{user.name}</span>
+          <span className="mt-1 text-xs font-gangwon font-medium">{user.name}</span>
 
         </div>
       )}

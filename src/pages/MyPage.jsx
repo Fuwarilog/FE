@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { mockUser } from "../data/sample";
-
+import { getUserInfo } from "../API/Auth";
 
 export default function Mypage() {
   const [userInfo, setUserInfo] = useState(null);
@@ -10,18 +8,11 @@ export default function Mypage() {
   useEffect(() => {
     const fetchMyInfo = async () => {
       try {
-        const token = localStorage.getItem("access_token"); // 저장된 access_token
-        localStorage.getItem("access_token")
-
-        const res = await axios.get("/api/users/my-info", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await getUserInfo(); 
         setUserInfo(res.data);
       } catch (err) {
         console.error("❌ 사용자 정보 조회 실패:", err);
-        setUserInfo(mockUser);
+        setUserInfo(null);
       } finally {
         setLoading(false);
       }
@@ -38,7 +29,7 @@ export default function Mypage() {
 
   return (
     <div className="p-8">
-      <h2 className="text-xl font-pretendard font-bold mb-4">내 정보</h2>
+      <h2 className="text-xl font-gangwon font-bold mb-4">내 정보</h2>
 
       <div className="flex items-center gap-4">
         <img
@@ -48,8 +39,8 @@ export default function Mypage() {
           onError={(e) => (e.currentTarget.src = "/profile.png")}
         />
         <div>
-          <p className="text-lg font-pretendard font-medium">이름: {userInfo.name}</p>
-          <p className="text-sm font-pretendard text-gray-600">이메일: {userInfo.email}</p>
+          <p className="text-xl font-gangwon font-medium">이름: {userInfo.name}</p>
+          <p className="text-base font-gangwon text-gray-600">이메일: {userInfo.email}</p>
         </div>
       </div>
     </div>

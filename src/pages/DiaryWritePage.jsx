@@ -52,8 +52,8 @@ export default function DiaryWritePage() {
             <div className="flex justify-between items-center mb-4">
                 {/* 왼쪽: 일차 + 날짜 */}
                 <div className="flex items-center gap-2">
-                    <span className="text-xl font-pretendard font-semibold">{dayIndex}일차 기록</span>
-                    <span className="text-sm font-pretendard text-gray-600">
+                    <span className="text-xl font-gangwon font-semibold">{dayIndex}일차 기록</span>
+                    <span className="text-sm font-gangwon text-gray-600">
                         {format(parseISO(date), "yyyy.MM.dd")}
                     </span>
                 </div>
@@ -65,7 +65,7 @@ export default function DiaryWritePage() {
                         checked={isPublic}
                         onCheckedChange={setIsPublic}
                     />
-                    <Label htmlFor="공개설정" className="text-sm font-pretendard text-gray-600">
+                    <Label htmlFor="공개설정" className="text-sm font-gangwon text-gray-600">
                         {isPublic ? "공개" : "비공개"}
                     </Label>
                 </div>
@@ -76,7 +76,7 @@ export default function DiaryWritePage() {
                 {tags.map((tag) => (
                     <span
                         key={tag.placeId}
-                        className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-pretendard shadow-sm"
+                        className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-gangwon shadow-sm"
                     >
                         #{tag.name}
                     </span>
@@ -89,16 +89,16 @@ export default function DiaryWritePage() {
                 placeholder="여행의 순간을 기록해보세요..."
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="min-h-[300px] rounded-2xl border-gray-200 bg-white/60 backdrop-blur-sm shadow-inner px-5 py-4 text-base font-pretendard placeholder:text-gray-400"
+                className="min-h-[300px] rounded-2xl border-gray-200 bg-white/60 backdrop-blur-sm shadow-inner px-5 py-4 text-base font-gangwon placeholder:text-gray-400"
             />
 
 
             {/* 하단 버튼 */}
             <div className="flex justify-end gap-4 mt-6 px-4">
-                <Button onClick={handleSave} className="rounded-full px-6 py-2 bg-sky-200 hover:bg-sky-100 text-gray font-pretendard shadow-md">
+                <Button onClick={handleSave} className="rounded-full px-6 py-2 bg-sky-200 hover:bg-sky-100 text-gray font-gangwon shadow-md">
                     저장
                 </Button>
-                <Button variant="outline" onClick={handleCancel} className="rounded-full px-6 py-2 bg-white-100 hover:bg-white-500 text-white font-pretendard shadow-md">
+                <Button variant="outline" onClick={handleCancel} className="rounded-full px-6 py-2 bg-white-100 hover:bg-white-500 text-white font-gangwon shadow-md">
                     취소
                 </Button>
             </div>

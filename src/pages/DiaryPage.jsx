@@ -22,7 +22,7 @@ export default function DiaryPage() {
 
   return (
     <div className="p-12">
-      <h1 className="text-2xl font-bold font-pretendard mb-6">📔 다이어리</h1>
+      <h1 className="text-2xl font-bold font-gangwon mb-6">📔 다이어리</h1>
 
       {Object.entries(groupedTrips)
         .sort((a, b) => b[0] - a[0]) // 연도 내림차순 정렬

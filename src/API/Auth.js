@@ -5,8 +5,9 @@ export function redirectToGoogleLogin() {
   window.location.href = "http://localhost:8080/oauth2/authorization/google";
 }
 
-// ✅ 로그인 여부 확인용 (예: 사이드바에 프로필 표시 등)
+// ✅ 사용자 정보 조회 (쿠키 기반)
 export const getUserInfo = async () => {
-  return await axios.get("/oauth2/redirect", { withCredentials: true });
-
+  return await axios.get("/api/v1/users/my-info", {
+    withCredentials: true, // 💡 이거만 있으면 됨!
+  });
 };

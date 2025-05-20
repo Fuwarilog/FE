@@ -8,7 +8,7 @@ export default function YearList({ years, onSelectYear }) {
           <li key={year}>
             <button
               onClick={() => onSelectYear(year)}
-              className="text-lg font-semibold font-pretendard hover:text-blue-600"
+              className="text-xl font-semibold font-gangwon hover:text-blue-600"
             >
               {year}년
             </button>

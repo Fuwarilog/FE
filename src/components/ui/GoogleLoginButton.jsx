@@ -1,7 +1,6 @@
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { Button } from "./button"; // shadcn 버튼
-import { FcGoogle } from "react-icons/fc";
 
 export default function GoogleLoginButton({ onLoginSuccess }) {
   const login = useGoogleLogin({
@@ -33,11 +32,10 @@ export default function GoogleLoginButton({ onLoginSuccess }) {
   return (
     <Button
       onClick={() => login()}
-      className="w-full text-lg py-6 bg-white text-black border border-gray rounded-xl shadow-none flex items-center justify-center gap-2"
+      className="w-full font-semibold text-[16px] py-6 bg-white text-black border border-gray rounded-xl shadow-none flex items-center justify-center gap-2"
       variant="outline"
     >
-      <FcGoogle size={20} />
-      로그인
+      LOGIN
     </Button>
   );
 }

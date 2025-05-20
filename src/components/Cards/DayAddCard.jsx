@@ -38,26 +38,32 @@ export default function DayAddCard({ onAdd }) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button className="!bg-indigo-100 !text-indigo-700 !hover:bg-indigo-200 !rounded-lg !px-4 !py-2 !font-pretendard !shadow-sm">
+                <Button
+                    className="!bg-indigo-100 !text-indigo-700 !hover:bg-indigo-300
+             !rounded-lg !px-4 !py-2 !font-gangwon !text-[17px] !shadow-sm
+             flex items-center justify-center
+             focus:outline-none focus:ring-0 focus:border-none focus:ring-transparent"
+                >
                     + 일정 추가
                 </Button>
+
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                    <DialogTitle>일정 추가</DialogTitle>
+                    <DialogTitle className="font-gangwon text-[22px]">일정 추가</DialogTitle>
                 </DialogHeader>
-                <div className="space-y-4">
+                <div className="space-y-3">
                     <Input
-                        className="font-pretendard"
+                        className="font-gangwon text-lg"
                         placeholder="국가를 입력하세요"
                         value={country}
                         onChange={(e) => setCountry(e.target.value)}
                     />
-                    <div className="flex items-center gap-2 font-pretendard">
+                    <div className="flex items-center gap-2 font-gangwon">
                         {/* 시작일 */}
                         <Popover>
                             <PopoverTrigger asChild>
-                                <Button variant="outline" className="w-full font-pretendard">
+                                <Button variant="outline" className="w-full font-gangwon">
                                     {startDate ? format(startDate, "yyyy-MM-dd") : "시작일 선택"}
                                 </Button>
                             </PopoverTrigger>
@@ -71,12 +77,12 @@ export default function DayAddCard({ onAdd }) {
                             </PopoverContent>
                         </Popover>
 
-                        <span className="text-gray-500 font-pretendard">~</span>
+                        <span className="text-gray-500 font-gangwon">~</span>
 
                         {/* 종료일 */}
                         <Popover>
                             <PopoverTrigger asChild>
-                                <Button variant="outline" className="w-full font-pretendard">
+                                <Button variant="outline" className="w-full font-gangwon">
                                     {endDate ? format(endDate, "yyyy-MM-dd") : "종료일 선택"}
                                 </Button>
                             </PopoverTrigger>
@@ -92,8 +98,8 @@ export default function DayAddCard({ onAdd }) {
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button onClick={handleSave} className="font-pretendard">저장</Button>
-                    <Button variant="outline" onClick={() => setOpen(false)} className="font-pretendard">취소</Button>
+                    <Button onClick={handleSave} className="font-gangwon">저장</Button>
+                    <Button variant="outline" onClick={() => setOpen(false)} className="font-gangwon">취소</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog >

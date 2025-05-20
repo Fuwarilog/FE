@@ -28,37 +28,37 @@ export default function Sidebar({ user, setUser }) {
 
       {/* 모든 버튼 포함 그룹: 메뉴 + 로그인/로그아웃 포함 */}
 
-      <div className="font-pretendard flex flex-col w-full gap-4">
+      <div className="font-gangwon flex flex-col w-full gap-4">
         <Link to="/">
-          <Button variant="outline" className="w-full justify-start px-4 py-6 text-base">
-            🏠 홈
+          <Button variant="outline" className="w-full justify-start px-4 py-6 font-semibold text-[16px]">
+            HOME
           </Button>
         </Link>
         <Link to="/calendar">
-          <Button variant="outline" className="w-full justify-start px-4 py-6 text-base">
-            📅 일정
+          <Button variant="outline" className="w-full justify-start px-4 py-6 font-semibold text-[16px]">
+            CALENDAR
           </Button>
         </Link>
         <Link to="/diary">
 
-          <Button variant="outline" className="w-full justify-start px-4 py-6 text-base">
+          <Button variant="outline" className="w-full justify-start px-4 py-6 font-semibold text-[16px]">
 
-            📓 다이어리
+            DIARY
           </Button>
         </Link>
         <Link to="/community">
-          <Button variant="outline" className="w-full justify-start px-4 py-6 text-base">
-            🌍 커뮤니티
+          <Button variant="outline" className="w-full justify-start px-4 py-6 font-semibold text-[16px]">
+            COMMUNITY
           </Button>
         </Link>
         <Link to="/map">
-          <Button variant="outline" className="w-full justify-start px-4 py-6 text-base">
-            🗺️ 지도
+          <Button variant="outline" className="w-full justify-start px-4 py-6 font-semibold text-[16px]">
+            MAP
           </Button>
         </Link>
         <Link to="/mypage">
-          <Button variant="outline" className="w-full justify-start px-4 py-6 text-base">
-            👤 마이페이지
+          <Button variant="outline" className="w-full justify-start px-4 py-6 font-semibold text-[16px]">
+            MY PAGE
           </Button>
         </Link>
 
@@ -68,10 +68,10 @@ export default function Sidebar({ user, setUser }) {
         ) : (
           <Button
             onClick={() => handleLogout()}
-            className="w-full justify-start px-4 py-6 text-base"
+            className="w-full justify-start px-4 py-6 font-semibold text-[16px]"
             variant="outline"
           >
-            로그아웃
+            LOGOUT
           </Button>
         )}
       </div>

@@ -43,7 +43,7 @@ export default function CalendarPage() {
     return (
         <div className="flex flex-col md:flex-row gap-8 p-6 justify-center">
             {/* 달력 */}
-            <div className="calendar-wrapper font-pretendard bg-white p-4 rounded-xl shadow w-[600px]">
+            <div className="calendar-wrapper font-gangwon bg-white p-4 rounded-xl shadow w-[600px]">
                 <FullCalendar
                     plugins={[dayGridPlugin]}
                     initialView="dayGridMonth"
@@ -57,9 +57,9 @@ export default function CalendarPage() {
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>{selectedEvent?.title}</DialogTitle>
+                        <DialogTitle  className="font-gangwon text-[22px] text-gray-800">{selectedEvent?.title}</DialogTitle>
                     </DialogHeader>
-                    <p className="text-sm text-gray-600">
+                    <p className="font-gangwon text-lg text-gray-600">
                         시작: {selectedEvent?.start?.toLocaleDateString()} <br />
                         종료: {selectedEvent?.end?.toLocaleDateString() || selectedEvent?.start?.toLocaleDateString()}
                     </p>
@@ -70,14 +70,14 @@ export default function CalendarPage() {
             <div className="w-full max-w-xs space-y-6">
                 {/* 오늘 일정 */}
                 <div>
-                    <h2 className="text-lg font-pretendard font-semibold mb-2">📌 오늘의 일정</h2>
+                    <h2 className="text-2xl font-gangwon font-semibold mb-2">📌 오늘의 일정</h2>
                     {todayEvents.length === 0 ? (
-                        <p className="text-sm text-muted-foreground">오늘은 일정이 없어요.</p>
+                        <p className="text-xl font-gangwon text-muted-foreground">오늘은 일정이 없어요.</p>
                     ) : (
                         <ul className="space-y-2">
                             {todayEvents.map((e) => (
                                 <li key={e.id} className="p-3 bg-blue-50 rounded-lg shadow-sm">
-                                    <p className="font-medium font-pretendard">{e.title}</p>
+                                    <p className="font-medium font-gangwon">{e.title}</p>
                                 </li>
                             ))}
                         </ul>
@@ -86,15 +86,15 @@ export default function CalendarPage() {
 
                 {/* 다가오는 일정 */}
                 <div>
-                    <h2 className="text-lg font-semibold font-pretendard mb-2">⏳ 다가오는 일정</h2>
+                    <h2 className="text-2xl font-semibold font-gangwon mb-2">⏳ 다가오는 일정</h2>
                     {upcomingEvents.length === 0 ? (
-                        <p className="text-sm text-muted-foreground">다가오는 일정이 없어요.</p>
+                        <p className="text-xl font-gangwon text-muted-foreground">다가오는 일정이 없어요.</p>
                     ) : (
                         <ul className="space-y-2">
                             {upcomingEvents.map((e) => (
                                 <li key={e.id} className="p-3 bg-green-50 rounded-lg shadow-sm">
-                                    <p className="font-medium font-pretendard">{e.title}</p>
-                                    <p className="text-sm text-gray-500">{e.start}</p>
+                                    <p className="text-xl font-medium font-gangwon">{e.title}</p>
+                                    <p className="text-lg font-gangwon text-gray-500">{e.start} ~ {e.end}</p>
                                 </li>
                             ))}
                         </ul>

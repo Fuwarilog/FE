@@ -89,8 +89,8 @@ export const sampleEvents = [
   {
     id: 2,
     title: "도쿄여행",
-    start: "2025-05-18",
-    end: "2025-05-20",
+    start: "2025-05-23",
+    end: "2025-05-26",
   },
   {
     id: 3,
@@ -99,3 +99,34 @@ export const sampleEvents = [
     end: "2025-05-14",
   },
 ]
+
+export const com = [
+  {
+    id: 1,
+    title: "제목 예시: 제주도 여행 기록",
+    userName: "지윤이",
+    date: "2025.05.19",
+    views: 29,
+    likes: 4,
+  },
+  {
+    id: 2,
+    title: "일본 도쿄 여행기 🗼",
+    userName: "여행덕후",
+    date: "2025.05.18",
+    views: 45,
+    likes: 10,
+  },
+];
+
+export const publicPosts = Object.entries(mockDiaryContents)
+  .filter(([date, content]) => content.isPublic)
+  .map(([date, content], index) => ({
+    id: index + 1,
+    title: content.content.slice(0, 20) + "...", // 미리보기
+    userName: mockUser.name,
+    date: date.replace(/-/g, "."),
+    views: Math.floor(Math.random() * 50), // 임시값
+    likes: Math.floor(Math.random() * 20), // 임시값
+  }));
+

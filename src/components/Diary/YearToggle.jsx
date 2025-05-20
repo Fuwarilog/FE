@@ -14,7 +14,7 @@ export default function YearToggle({ year, trips }) {
   return (
     <Accordion type="single" collapsible className="w-full mb-4">
       <AccordionItem value={`year-${year}`}>
-        <AccordionTrigger className="text-lg font-semibold font-pretendard text-gray-800">
+        <AccordionTrigger className="text-2xl font-semibold font-gangwon text-gray-800">
           {year}년
         </AccordionTrigger>
         <AccordionContent className="space-y-4 pl-2">
