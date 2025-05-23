@@ -2,32 +2,35 @@ import { Routes, Route } from "react-router-dom";
 import MainPage from "../pages/MainPage";
 import LoginPage from "../pages/LoginPage";
 import Mypage from "../pages/MyPage";
-import DiaryPage from "../pages/DiaryPage";
-import DiaryWritePage from "../pages/DiaryWritePage";
-import DiaryViewPage from "../pages/DiaryViewPage";
+import DiaryPage from "../pages/Diary/DiaryPage";
+import DiaryWritePage from "../pages/Diary/DiaryWritePage";
+import DiaryViewPage from "../pages/Diary/DiaryViewPage";
 import CalendarPage from "../pages/CalendarPage";
 import RedirectHandler from "../components/Auth/RedirectHandler";
-import CommunityMain from "../components/community/CommunityMain";
+import CommunityPage from "../pages/Community/CommunityPage";
 import MyLikedPosts from "../components/community/MyLikedPosts";
 import MyBookmarkedPosts from "../components/community/MyBookmarkedPosts";
 import MyPublicPosts from "../components/community/MyPublicPosts";
+import CommunityDetail from "../pages/Community/CommunityDetail";
 
 export default function Router({ user, setUser }) {
   return (
     <Routes>
       <Route path="/" element={<MainPage user={user} />} />
       <Route path="/oauth2/redirect" element={<RedirectHandler />} />
-      <Route path="/login" element={<LoginPage />} />
       <Route path="/mypage" element={<Mypage />} />
       <Route path="/diary" element={<DiaryPage />} />
       <Route path="/diary/write" element={<DiaryWritePage />} />
       <Route path="/diary/view" element={<DiaryViewPage />} />
-      <Route path="/calendar" element={<CalendarPage />} />
-
-      <Route path="/community" element={<CommunityMain />} />
+      <Route path="/calendar" element={<CalendarPage user={user} />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/community" element={<CommunityPage />} />
       <Route path="/community/me/likes" element={<MyLikedPosts />} />
       <Route path="/community/me/bookmarks" element={<MyBookmarkedPosts />} />
       <Route path="/community/me/public" element={<MyPublicPosts />} />
+      <Route path="/community/post/:id" element={<CommunityDetail />} />
+
+
     </Routes>
   );
 }

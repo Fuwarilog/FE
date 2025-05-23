@@ -4,11 +4,7 @@ import { Link } from "react-router-dom";
 
 export default function Sidebar({ user, setUser }) {
   const handleLoginSuccess = (userData) => {
-    const user = {
-      name: userData.name,
-      picture: userData.picture,
-    };
-    localStorage.setItem("fuwari-user", JSON.stringify(user));
+    localStorage.setItem("fuwari-user", JSON.stringify(userData));
     setUser(user);
   };
 

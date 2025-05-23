@@ -4,7 +4,13 @@ import { Button } from "./button"; // shadcn 버튼
 
 export default function GoogleLoginButton({ onLoginSuccess }) {
   const login = useGoogleLogin({
+    scope: "profile email",
+    prompt: "consent select_account",
+
     onSuccess: async (tokenResponse) => {
+    const accessToken = tokenResponse.access_token;
+    localStorage.setItem("access_token", accessToken);
+
       try {
         const res = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
           headers: {
@@ -15,11 +21,10 @@ export default function GoogleLoginButton({ onLoginSuccess }) {
         const userData = res.data;
         console.log("✅ 사용자 정보:", userData);
 
-        // ✅ Sidebar → handleLoginSuccess → setUser({ name, picture })로 연결됨
-        onLoginSuccess({
-          name: userData.name,
-          picture: userData.picture,
-        });
+        localStorage.setItem("fuwari-user", JSON.stringify(userData));
+
+        //setUser 연결
+        onLoginSuccess(userData);
       } catch (err) {
         console.error("❌ 사용자 정보 불러오기 실패:", err);
       }

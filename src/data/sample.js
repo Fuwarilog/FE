@@ -37,6 +37,7 @@ export const mockTrips = [
 // 🧪 mock diary content 저장소 예시 (localStorage를 흉내 낸 구조)
 export const mockDiaryContents = {
   "2024-12-29": {
+    tripTitle: "엄마랑 제주여행",
     content: "엄마랑 도착해서 흑돼지 먹었음!",
     isPublic: true,
     tags: ["흑돼지", "공항", "숙소"]
@@ -56,7 +57,7 @@ export const mockMapTags = [
 
 // 🧪 mock Google 로그인 사용자 예시
 export const mockUser = {
-  name: "송지윤",
+  name: "지윤송",
   email: "jiyun.dev@gmail.com",
   picture: "/profile.png",
   uid: "user-1234"

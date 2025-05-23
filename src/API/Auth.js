@@ -1,4 +1,3 @@
-// src/API/Auth.js
 import axios from "axios";
 // ✅ 구글 로그인 (리디렉션 방식)
 export function redirectToGoogleLogin() {

@@ -10,12 +10,11 @@ function App() {
     const savedUser = localStorage.getItem("fuwari-user");
     if (savedUser) setUser(JSON.parse(savedUser));
   }, []);
-
+  
   return (
     <div className="flex h-screen">
       <Sidebar user={user} setUser={setUser} />
       <div className="flex-1 bg-white">
-
         <Router user={user} setUser={setUser} />
       </div>
     </div>

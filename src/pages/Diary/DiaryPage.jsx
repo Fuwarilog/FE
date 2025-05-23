@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import YearToggle from "../components/Diary/YearToggle";
-import { mockTrips } from "../data/sample";
+import YearToggle from "../../components/Diary/YearToggle";
+import { mockTrips } from "../../data/sample";
 
 function groupTripsByYear(trips) {
   return trips.reduce((acc, trip) => {

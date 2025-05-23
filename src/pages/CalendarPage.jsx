@@ -1,17 +1,38 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+//fullcalendar
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import "@fullcalendar/common/main.css";
 import "@fullcalendar/daygrid/main.css";
+//일정추가
 import DayAddCard from "../components/Cards/DayAddCard";
+//날짜변환
 import { isToday, isWithinInterval, parseISO, addDays } from "date-fns";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/ui/dialog"
+import { fetchCalendarEvents } from "../API/Calendar"; // ✅ API 연결
 
+export default function CalendarPage({user}) {
 
-import { sampleEvents } from "../data/sample";
-export default function CalendarPage() {
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [open, setOpen] = useState(false);
+
+    const [events, setEvents] = useState([]);
+
+    useEffect(() => {
+        if (!user || !user.sub) {
+            console.error("❌ 사용자 정보 없음 또는 ID 없음");
+            return;
+        }
+        console.log("🎯 user.sub:", user.sub);
+        fetchCalendarEvents(user.sub)
+            .then((res) => {
+                console.log("📦 받아온 원본 데이터:", res.data);
+                setEvents(res.data);
+            })
+            .catch((err) => {
+                console.error("❌ 일정 로딩 실패:", err);
+            });
+    }, [user]);
 
     const handleEventClick = (info) => {
         setSelectedEvent(info.event);
@@ -19,25 +40,25 @@ export default function CalendarPage() {
         console.log("이벤트 클릭됨");
 
     };
-    const today = new Date();
 
+    const today = useMemo(() => new Date(), []);
     const todayEvents = useMemo(
         () =>
-            sampleEvents.filter((e) =>
+            events.filter((e) =>
                 isToday(parseISO(e.start))
             ),
-        []
+        [events]
     );
 
     const upcomingEvents = useMemo(
         () =>
-            sampleEvents.filter((e) =>
+            events.filter((e) =>
                 isWithinInterval(parseISO(e.start), {
                     start: today,
                     end: addDays(today, 7),
                 })
             ),
-        []
+        [events, today]
     );
 
     return (
@@ -47,7 +68,7 @@ export default function CalendarPage() {
                 <FullCalendar
                     plugins={[dayGridPlugin]}
                     initialView="dayGridMonth"
-                    events={sampleEvents}
+                    events={events}
                     height="auto"
                     aspectRatio={1}
                     eventClick={handleEventClick}
@@ -57,7 +78,7 @@ export default function CalendarPage() {
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle  className="font-gangwon text-[22px] text-gray-800">{selectedEvent?.title}</DialogTitle>
+                        <DialogTitle className="font-gangwon text-[22px] text-gray-800">{selectedEvent?.title}</DialogTitle>
                     </DialogHeader>
                     <p className="font-gangwon text-lg text-gray-600">
                         시작: {selectedEvent?.start?.toLocaleDateString()} <br />

@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { format, parseISO } from "date-fns";
-import { Button } from "../components/ui/button";
+import { Button } from "../../components/ui/button";
 
 export default function DiaryViewPage() {
     const location = useLocation();
@@ -35,7 +35,7 @@ export default function DiaryViewPage() {
             </div>
 
             <div className="flex justify-end gap-4 mt-6 px-4">
-                <Button onClick={handleEdit} className="rounded-full px-6 py-2 bg-sky-200 hover:bg-sky-100 text-gray font-pretendard shadow-md">
+                <Button onClick={handleEdit} className="rounded-full px-6 py-1.0 bg-slate-800  text-gray font-gangwon text-lg shadow-md">
                     수정
                 </Button>
             </div>
