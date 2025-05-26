@@ -4,9 +4,14 @@ export function redirectToGoogleLogin() {
   window.location.href = "http://localhost:8080/oauth2/authorization/google";
 }
 
-// ✅ 사용자 정보 조회 (쿠키 기반)
 export const getUserInfo = async () => {
-  return await axios.get("/api/v1/users/my-info", {
-    withCredentials: true, // 💡 이거만 있으면 됨!
+  const token = localStorage.getItem("access_token");
+
+  const res = await axios.get("http://localhost:8080/api/v1/users/my-info", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    withCredentials: true,
   });
+  return res.data;
 };

@@ -4,26 +4,24 @@ import { Button } from "./button"; // shadcn 버튼
 
 export default function GoogleLoginButton({ onLoginSuccess }) {
   const login = useGoogleLogin({
-    scope: "profile email",
-    prompt: "consent select_account",
-
     onSuccess: async (tokenResponse) => {
-    const accessToken = tokenResponse.access_token;
-    localStorage.setItem("access_token", accessToken);
-
+      const accessToken = tokenResponse.access_token;
+      localStorage.setItem("access_token", accessToken);
       try {
         const res = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
           headers: {
             Authorization: `Bearer ${tokenResponse.access_token}`,
           },
         });
-
-        const userData = res.data;
+        axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+        
+        const { name, picture } = res.data;
+        const userData = { name, picture }
         console.log("✅ 사용자 정보:", userData);
 
+        localStorage.setItem("access_token", accessToken); // 참고용
         localStorage.setItem("fuwari-user", JSON.stringify(userData));
 
-        //setUser 연결
         onLoginSuccess(userData);
       } catch (err) {
         console.error("❌ 사용자 정보 불러오기 실패:", err);
@@ -33,6 +31,7 @@ export default function GoogleLoginButton({ onLoginSuccess }) {
       console.log("❌ 로그인 실패");
     },
   });
+
 
   return (
     <Button

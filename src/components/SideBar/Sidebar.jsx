@@ -4,9 +4,14 @@ import { Link } from "react-router-dom";
 
 export default function Sidebar({ user, setUser }) {
   const handleLoginSuccess = (userData) => {
-    localStorage.setItem("fuwari-user", JSON.stringify(userData));
-    setUser(user);
+  const user = {
+    name: userData.name,
+    picture: userData.picture,
   };
+  localStorage.setItem("fuwari-user", JSON.stringify(user)); 
+  setUser(user); 
+};
+
 
   const handleLogout = () => {
     localStorage.removeItem("fuwari-user"); // 저장된 로그인 정보 삭제

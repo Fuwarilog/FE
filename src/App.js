@@ -8,7 +8,9 @@ function App() {
 
   useEffect(() => {
     const savedUser = localStorage.getItem("fuwari-user");
-    if (savedUser) setUser(JSON.parse(savedUser));
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
   }, []);
   
   return (

@@ -1,17 +1,17 @@
 // API/Calendar.js
-import axios from "../lib/axiosInstance";
+import axios from "axios";
 
 // 사용자 일정 조회
 export const fetchCalendarEvents = async (tripId) => {
   if (!tripId) throw new Error("tripId는 필수입니다.");
+
   const accessToken = localStorage.getItem("access_token");
-  console.log(" accessToken:", accessToken);
-  const url = `/api/v1/trips/event/${tripId}`;
+  const url =  `http://localhost:8080/api/v1/trips/event/${tripId}`;
   return await axios.get(url, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`, // ✅ 헤더에 토큰 포함
+   headers: {
+      Authorization: `Bearer ${accessToken}`,
     },
-    withCredentials: true, // ✅ 쿠키 방식 인증도 함께 사용한다면 필요
+    withCredentials: true,
   });
 };
 

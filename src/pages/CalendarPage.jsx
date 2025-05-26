@@ -9,57 +9,58 @@ import DayAddCard from "../components/Cards/DayAddCard";
 //날짜변환
 import { isToday, isWithinInterval, parseISO, addDays } from "date-fns";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/ui/dialog"
-import { fetchCalendarEvents } from "../API/Calendar"; // ✅ API 연결
 
-export default function CalendarPage({user}) {
+import { fetchCalendarEvents } from "../API/Calendar";
+import { getServerUserInfo } from "../API/AuthServer";
 
+export default function CalendarPage() {
+    const [events, setEvents] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [open, setOpen] = useState(false);
 
-    const [events, setEvents] = useState([]);
-
     useEffect(() => {
-        if (!user || !user.sub) {
-            console.error("❌ 사용자 정보 없음 또는 ID 없음");
-            return;
-        }
-        console.log("🎯 user.sub:", user.sub);
-        fetchCalendarEvents(user.sub)
-            .then((res) => {
-                console.log("📦 받아온 원본 데이터:", res.data);
+        const fetchEvents = async () => {
+            try {
+                
+                // 1. 사용자 정보 조회
+                const user = await getServerUserInfo(); // -> user.id
+                const tripId = user.id;
+
+                // 2. tripId로 일정 조회(get)
+                const res = await fetchCalendarEvents(tripId);
                 setEvents(res.data);
+            } catch (err) {
+                if (err.response?.status === 401 || err.message === "Network Error") {
+                    console.warn("❌ 인증 실패 → 로그인 페이지로 이동");
+                    window.location.href = "http://localhost:8080/oauth2/authorization/google";
+                } else {
+                    console.error("❌ 일정 로딩 실패:", err);
+                }
+            }
+        };
+
+        fetchEvents();
+    }, []);
+
+    const today = useMemo(() => new Date(), []);
+    const todayEvents = useMemo(() => {
+        return events.filter((e) => isToday(parseISO(e.start)));
+    }, [events]);
+
+    const upcomingEvents = useMemo(() => {
+        return events.filter((e) =>
+            isWithinInterval(parseISO(e.start), {
+                start: today,
+                end: addDays(today, 7),
             })
-            .catch((err) => {
-                console.error("❌ 일정 로딩 실패:", err);
-            });
-    }, [user]);
+        );
+    }, [events, today]);
 
     const handleEventClick = (info) => {
         setSelectedEvent(info.event);
         setOpen(true);
-        console.log("이벤트 클릭됨");
-
+        console.log("🖱️ 이벤트 클릭됨:", info.event);
     };
-
-    const today = useMemo(() => new Date(), []);
-    const todayEvents = useMemo(
-        () =>
-            events.filter((e) =>
-                isToday(parseISO(e.start))
-            ),
-        [events]
-    );
-
-    const upcomingEvents = useMemo(
-        () =>
-            events.filter((e) =>
-                isWithinInterval(parseISO(e.start), {
-                    start: today,
-                    end: addDays(today, 7),
-                })
-            ),
-        [events, today]
-    );
 
     return (
         <div className="flex flex-col md:flex-row gap-8 p-6 justify-center">
