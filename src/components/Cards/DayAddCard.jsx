@@ -10,6 +10,7 @@ import {
 } from "../ui/dialog"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
+import { Textarea } from "../ui/textarea"; 
 import { Calendar } from "../ui/calendar"
 import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover"
 import { format } from "date-fns"
@@ -18,6 +19,7 @@ import { ko } from "date-fns/locale"
 export default function DayAddCard({ onAdd }) {
     const [open, setOpen] = useState(false)
     const [country, setCountry] = useState("")
+    const [description, setDescription] = useState("");
     const [startDate, setStartDate] = useState("")
     const [endDate, setEndDate] = useState("")
 
@@ -26,11 +28,13 @@ export default function DayAddCard({ onAdd }) {
         onAdd({
             id: Date.now(),
             title: country,
+            description,
             start: startDate,
             end: endDate || startDate,
         })
         setOpen(false)
         setCountry("")
+        setDescription("")
         setStartDate("")
         setEndDate("")
     }
@@ -54,11 +58,17 @@ export default function DayAddCard({ onAdd }) {
                 </DialogHeader>
                 <div className="space-y-3">
                     <Input
-                        className="font-gangwon text-lg"
-                        placeholder="국가를 입력하세요"
+                        className="border rounded-lg font-gangwon text-lg"
+                        placeholder=" 국가를 입력하세요"
                         value={country}
                         onChange={(e) => setCountry(e.target.value)}
                     />
+                    <Textarea
+                        className="w-full border rounded-lg p-3 font-gangwon text-lg"
+                        placeholder="여행에 대한 간단한 설명을 입력하세요"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                    ></Textarea>
                     <div className="flex items-center gap-2 font-gangwon">
                         {/* 시작일 */}
                         <Popover>

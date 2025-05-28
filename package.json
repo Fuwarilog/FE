@@ -8,6 +8,7 @@
     "@fullcalendar/react": "^5.11.5",
     "@radix-ui/react-dialog": "^1.1.13",
     "@radix-ui/react-popover": "^1.1.13",
+    "@react-google-maps/api": "^2.20.6",
     "@react-oauth/google": "^0.12.2",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",

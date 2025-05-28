@@ -5,13 +5,14 @@ export function redirectToGoogleLogin() {
 }
 
 export const getUserInfo = async () => {
-  const token = localStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
+  if (!accessToken) throw new Error("JWT가 없습니다");
 
-  const res = await axios.get("http://localhost:8080/api/v1/users/my-info", {
+  const response = await axios.get("http://localhost:8080/api/v1/users/my-info", {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${accessToken}`,
     },
-    withCredentials: true,
   });
-  return res.data;
+
+  return response.data;
 };

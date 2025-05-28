@@ -12,6 +12,7 @@ import MyLikedPosts from "../components/community/MyLikedPosts";
 import MyBookmarkedPosts from "../components/community/MyBookmarkedPosts";
 import MyPublicPosts from "../components/community/MyPublicPosts";
 import CommunityDetail from "../pages/Community/CommunityDetail";
+import MapPage from "../pages/MapPage";
 
 export default function Router({ user, setUser }) {
   return (
@@ -22,13 +23,16 @@ export default function Router({ user, setUser }) {
       <Route path="/diary" element={<DiaryPage />} />
       <Route path="/diary/write" element={<DiaryWritePage />} />
       <Route path="/diary/view" element={<DiaryViewPage />} />
-      <Route path="/calendar" element={<CalendarPage user={user} />} />
+      <Route path="/calendar" element={<CalendarPage />} />
+
       <Route path="/login" element={<LoginPage />} />
       <Route path="/community" element={<CommunityPage />} />
       <Route path="/community/me/likes" element={<MyLikedPosts />} />
       <Route path="/community/me/bookmarks" element={<MyBookmarkedPosts />} />
       <Route path="/community/me/public" element={<MyPublicPosts />} />
       <Route path="/community/post/:id" element={<CommunityDetail />} />
+
+      <Route path="/map" element={<MapPage />} />
 
 
     </Routes>

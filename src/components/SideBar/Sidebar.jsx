@@ -1,27 +1,33 @@
+import { useEffect } from "react";
 import GoogleLoginButton from "../ui/GoogleLoginButton";
 import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
 
 export default function Sidebar({ user, setUser }) {
   const handleLoginSuccess = (userData) => {
-  const user = {
-    name: userData.name,
-    picture: userData.picture,
+    const user = {
+      name: userData.name,
+      picture: userData.picture,
+    };
+    localStorage.setItem("fuwari-user", JSON.stringify(user));
+    setUser(user);
   };
-  localStorage.setItem("fuwari-user", JSON.stringify(user)); 
-  setUser(user); 
-};
-
+  
+  useEffect(() => {
+    const savedUser = localStorage.getItem("fuwari-user");
+    if (savedUser && !user) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, [user, setUser]);
 
   const handleLogout = () => {
     localStorage.removeItem("fuwari-user"); // 저장된 로그인 정보 삭제
     setUser(null); // 상태 초기화
   };
-  
 
   return (
     <aside className="w-64 h-screen bg-white border-r px-6 py-8 flex flex-col items-center">
-      
+
       {/* 로고 */}
       <div className="mb-6">
         <img src="/fuwari.png" alt="logo" className="w-40" />
@@ -35,15 +41,15 @@ export default function Sidebar({ user, setUser }) {
             HOME
           </Button>
         </Link>
+
         <Link to="/calendar">
           <Button variant="outline" className="w-full justify-start px-4 py-6 font-semibold text-[16px]">
             CALENDAR
           </Button>
         </Link>
+
         <Link to="/diary">
-
           <Button variant="outline" className="w-full justify-start px-4 py-6 font-semibold text-[16px]">
-
             DIARY
           </Button>
         </Link>
@@ -65,7 +71,7 @@ export default function Sidebar({ user, setUser }) {
 
         {/* ✅ 로그인/로그아웃도 같은 그룹에 포함 */}
         {!user ? (
-          <GoogleLoginButton onLoginSuccess={handleLoginSuccess} />
+          <GoogleLoginButton />
         ) : (
           <Button
             onClick={() => handleLogout()}
@@ -76,8 +82,8 @@ export default function Sidebar({ user, setUser }) {
           </Button>
         )}
       </div>
-      
+
     </aside>
-    
+
   );
 }
