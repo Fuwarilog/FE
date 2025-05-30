@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Router from "./routes/Router";
 import Sidebar from "./components/SideBar/Sidebar";
-import axios from "axios";
 import { useLocation } from "react-router-dom";
 
 function App() {
@@ -10,12 +9,6 @@ function App() {
   const isMapPage = location.pathname.startsWith("/map");
   
   useEffect(() => {
-    // ✅ JWT 토큰 axios 전역 설정
-    const savedToken = localStorage.getItem("access_token");
-    if (savedToken) {
-      axios.defaults.headers.common["Authorization"] = `Bearer ${savedToken}`;
-    }
-
     // ✅ 사용자 정보 복구
     const savedUser = localStorage.getItem("fuwari-user");
     if (savedUser) {

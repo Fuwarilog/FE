@@ -10,7 +10,7 @@ import {
 } from "../ui/dialog"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
-import { Textarea } from "../ui/textarea"; 
+import { Textarea } from "../ui/textarea";
 import { Calendar } from "../ui/calendar"
 import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover"
 import { format } from "date-fns"
@@ -24,20 +24,24 @@ export default function DayAddCard({ onAdd }) {
     const [endDate, setEndDate] = useState("")
 
     const handleSave = () => {
-        if (!country || !startDate) return
-        onAdd({
-            id: Date.now(),
+        if (!country || !startDate) return;
+
+        const newEvent = {
             title: country,
             description,
-            start: startDate,
-            end: endDate || startDate,
-        })
-        setOpen(false)
-        setCountry("")
-        setDescription("")
-        setStartDate("")
-        setEndDate("")
-    }
+            country,
+            startDate: format(startDate, "yyyy-MM-dd"),
+            endDate: format(endDate || startDate, "yyyy-MM-dd"),
+        };
+
+        onAdd(newEvent); 
+
+        setOpen(false);
+        setCountry("");
+        setDescription("");
+        setStartDate("");
+        setEndDate("");
+    };
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>

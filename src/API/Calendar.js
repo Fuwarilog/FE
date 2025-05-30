@@ -10,7 +10,9 @@ export const fetchCalendarEvents = async (tripId) => {
 
 // ✅ 일정 추가 (trip 생성 포함)
 export const addCalendarEvent = async (eventData) => {
-  return await axios.post("/api/v1/trips/event", eventData, {
+  return await axios.post(
+     "http://localhost:8080/api/v1/trips/event",
+    eventData, {
     withCredentials: true,
     headers: {
       "Content-Type": "application/json",
@@ -30,9 +32,19 @@ export const deleteCalendarEvent = async (tripId) => {
 
 export const fetchTripsByMonth = async (year, month) => {
   const accessToken = localStorage.getItem("access_token");
-  const url = `/api/v1/trips/by-month?year=${year}&month=${month}`; // 👉 매핑된 엔드포인트로 수정 필요
+  const url = `http://localhost:8080/api/v1/trips/event/month?year=${year}&month=${month}`;
 
   return await axios.get(url, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    withCredentials: true,
+  });
+};
+
+export const fetchAllTrips = async () => {
+  const accessToken = localStorage.getItem("access_token");
+  return await axios.get("http://localhost:8080/api/v1/trips/all", {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },

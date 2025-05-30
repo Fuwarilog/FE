@@ -2,6 +2,7 @@ import { redirectToGoogleLogin } from "../../API/Auth"; // 리디렉션 함수 i
 import { Button } from "./button"; // shadcn의 버튼 컴포넌트
 
 export default function GoogleLoginButton() {
+  
   return (
     <Button
       onClick={redirectToGoogleLogin}
