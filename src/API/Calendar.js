@@ -41,13 +41,3 @@ export const fetchTripsByMonth = async (year, month) => {
     withCredentials: true,
   });
 };
-
-export const fetchAllTrips = async () => {
-  const accessToken = localStorage.getItem("access_token");
-  return await axios.get("http://localhost:8080/api/v1/trips/all", {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-    withCredentials: true,
-  });
-};

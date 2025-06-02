@@ -75,3 +75,16 @@ code {
   border-color: transparent !important;
   font-family: 'GangwonEduSaeeum_OTFMediumA' !important;
 }
+
+a.fc-daygrid-event,
+a.fc-daygrid-event .fc-event-main  {
+  background-color: #f0fdf4 !important; /* 예: sky-blue */
+  color: #525252 !important;           /* 글자색 */
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0px 5px !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+  font-family: 'GangwonEduSaeeum_OTFMediumA' !important;
+  font-size: 17px !important;
+}

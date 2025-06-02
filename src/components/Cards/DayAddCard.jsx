@@ -15,13 +15,14 @@ import { Calendar } from "../ui/calendar"
 import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover"
 import { format } from "date-fns"
 import { ko } from "date-fns/locale"
+import { DialogDescription } from "@radix-ui/react-dialog";
 
 export default function DayAddCard({ onAdd }) {
     const [open, setOpen] = useState(false)
     const [country, setCountry] = useState("")
     const [description, setDescription] = useState("");
-    const [startDate, setStartDate] = useState("")
-    const [endDate, setEndDate] = useState("")
+    const [startDate, setStartDate] = useState(null)
+    const [endDate, setEndDate] = useState(null)
 
     const handleSave = () => {
         if (!country || !startDate) return;
@@ -39,8 +40,8 @@ export default function DayAddCard({ onAdd }) {
         setOpen(false);
         setCountry("");
         setDescription("");
-        setStartDate("");
-        setEndDate("");
+        setStartDate(null);
+        setEndDate(null);
     };
 
     return (
@@ -50,7 +51,7 @@ export default function DayAddCard({ onAdd }) {
                     className="!bg-indigo-100 !text-indigo-700 !hover:bg-indigo-300
              !rounded-lg !px-4 !py-2 !font-gangwon !text-[17px] !shadow-sm
              flex items-center justify-center
-             focus:outline-none focus:ring-0 focus:border-none focus:ring-transparent"
+             !focus:outline-none !focus:ring-0 !focus:border-none !focus:ring-transparent"
                 >
                     + 일정 추가
                 </Button>
@@ -59,6 +60,7 @@ export default function DayAddCard({ onAdd }) {
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle className="font-gangwon text-[22px]">일정 추가</DialogTitle>
+                    <DialogDescription className="font-gangwon text-sm text-gray-500"></DialogDescription>
                 </DialogHeader>
                 <div className="space-y-3">
                     <Input
@@ -111,7 +113,7 @@ export default function DayAddCard({ onAdd }) {
                         </Popover>
                     </div>
                 </div>
-                <DialogFooter>
+                <DialogFooter  className="!flex-row !justify-end !gap-2">
                     <Button onClick={handleSave} className="font-gangwon">저장</Button>
                     <Button variant="outline" onClick={() => setOpen(false)} className="font-gangwon">취소</Button>
                 </DialogFooter>
