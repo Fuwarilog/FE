@@ -8,6 +8,7 @@
     "@fullcalendar/react": "^5.11.5",
     "@radix-ui/react-dialog": "^1.1.13",
     "@radix-ui/react-popover": "^1.1.13",
+    "@radix-ui/react-scroll-area": "^1.2.9",
     "@react-google-maps/api": "^2.20.6",
     "@react-oauth/google": "^0.12.2",
     "@testing-library/dom": "^10.4.0",
@@ -35,7 +36,6 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:8080",
   "eslintConfig": {
     "extends": [
       "react-app",

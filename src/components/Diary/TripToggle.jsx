@@ -39,7 +39,7 @@ export default function TripToggle({ trip }) {
 
                         {/* 제목 + 날짜 묶음 */}
                         <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
-                            <span className="text-[20px] font-semibold text-gray-800"> {trip.title}</span>
+                            <span className="text-[21px] font-semibold text-gray-800"> {trip.title}</span>
                             <span className="text-sm  text-gray-500">
                                 {start} ~ {end}
                             </span>

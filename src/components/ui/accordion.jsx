@@ -1,8 +1,8 @@
 import * as React from "react";
 
-export function Accordion({ children, className, ...props }) {
+export function Accordion({ children, className, collapsible, type, ...rest }) {
   return (
-    <div className={`border border-gray-200 rounded-md ${className || ""}`} {...props}>
+    <div className={`border border-gray-200 rounded-md ${className || ""}`} {...rest}>
       {children}
     </div>
   );
@@ -30,12 +30,12 @@ export function AccordionItem({ value, children, className, ...props }) {
 }
 
 
-export function AccordionTrigger({ children, className, isOpen, toggle, ...props }) {
+export function AccordionTrigger({ children, className, isOpen, toggle, ...rest }) {
   return (
     <button
       onClick={toggle}
       className={`flex w-full items-center justify-between p-4 font-medium transition-all hover:bg-gray-100 ${className || ""}`}
-      {...props}
+      {...rest}
     >
       <span>{children}</span>
       <span className="text-[17px]">{isOpen ? "▾" : "▸"}</span>
@@ -43,11 +43,11 @@ export function AccordionTrigger({ children, className, isOpen, toggle, ...props
   );
 }
 
-export function AccordionContent({ children, className, isOpen, ...props }) {
+export function AccordionContent({ children, className, isOpen, toggle, ...rest }) {
   if (!isOpen) return null;
 
   return (
-    <div className={`p-4 ${className || ""}`} {...props}>
+    <div className={`p-4 ${className || ""}`} {...rest}>
       {children}
     </div>
   );

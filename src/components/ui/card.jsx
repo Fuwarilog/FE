@@ -30,3 +30,13 @@ export function CardContent({ className, ...props }) {
   return <div className={`p-6 pt-0 ${className || ""}`} {...props} />;
 }
 
+export function CardDescription({ className, children, ...props }) {
+  return (
+    <p
+      className={`text-sm text-muted-foreground ${className || ""}`}
+      {...props}
+    >
+      {children}
+    </p>
+  );
+}

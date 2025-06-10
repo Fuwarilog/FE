@@ -20,10 +20,11 @@ export default function CalendarPage() {
 
   const loadMonthlyEvents = async (year, month) => {
     const key = `${year}-${month}`;
-    if (loadedMonths.has(key)) return;
+    if (loadedMonths.has(key)) return; // 이미 불러온 달이면 스킵
 
     try {
       const res = await fetchTripsByMonth(year, month);
+
       const formatted = res.data.map(trip => ({
         id: trip.tripId,
         title: trip.title,
@@ -32,27 +33,20 @@ export default function CalendarPage() {
         allDay: true
       }));
 
+      // 🧠 기존 이벤트 상태를 Map으로 변환하여 최신값으로 덮어쓰기
       setEvents(prevEvents => {
-        const prevKeys = new Set(prevEvents.map(e =>
-          `${e.id}-${format(e.start, "yyyy-MM-dd")}-${format(e.end, "yyyy-MM-dd")}`
-        ));
-
-        const uniqueNew = formatted.filter(e => {
-          const key = `${e.id}-${format(e.start, "yyyy-MM-dd")}-${format(e.end, "yyyy-MM-dd")}`;
-          return !prevKeys.has(key);
-        });
-
-        return [...prevEvents, ...uniqueNew];
+        const map = new Map(prevEvents.map(e => [e.id, e]));
+        formatted.forEach(e => map.set(e.id, e));
+        return Array.from(map.values());
       });
-
-
 
       setLoadedMonths(prev => new Set(prev).add(key));
       console.log(`📅 ${key} 일정 로드 완료`, formatted);
     } catch (err) {
-      console.error("❌ 월별 일정 조회 실패:", err);
+      console.error(`❌ ${key} 일정 조회 실패`, err);
     }
   };
+
 
   const loadAllEvents = async () => {
     const currentYear = new Date().getFullYear();
@@ -65,8 +59,8 @@ export default function CalendarPage() {
           id: trip.tripId,
           title: trip.title,
           start: parseISO(trip.startDate),
-          end: parseISO(trip.endDate),
-          allDay: true
+          end: addDays(parseISO(trip.endDate), 1),
+          allDay: true,
         }));
         all.push(...parsed);
       } catch (err) {
@@ -74,6 +68,7 @@ export default function CalendarPage() {
       }
     }
 
+    // 중복 제거 (tripId + 날짜 기준)
     const makeKey = (e) => `${e.id}-${format(e.start, "yyyy-MM-dd")}-${format(e.end, "yyyy-MM-dd")}`;
     const seen = new Set();
     const deduplicated = [];
@@ -86,9 +81,10 @@ export default function CalendarPage() {
       }
     }
 
-    setAllEvents(deduplicated);
-    setEvents(deduplicated);
+    setAllEvents(deduplicated); // 오늘/다가오는 일정 계산용
+    setEvents(deduplicated);    // 캘린더에 표시용
   };
+
 
   useEffect(() => {
     const today = new Date();
@@ -126,7 +122,10 @@ export default function CalendarPage() {
         <FullCalendar
           plugins={[dayGridPlugin]}
           initialView="dayGridMonth"
-          events={events}
+          events={events.map(e => ({
+            ...e,
+            end: addDays(e.end, 1), // ✅ 렌더링할 때만 하루 추가
+          }))}
           height="auto"
           aspectRatio={1}
           eventClick={handleEventClick}
@@ -211,7 +210,7 @@ export default function CalendarPage() {
                   description: newEvent.description || "",
                   country: newEvent.country || newEvent.title,
                   startDate: format(start, "yyyy-MM-dd"),
-                  endDate: format(addDays(end, 1), "yyyy-MM-dd"),
+                  endDate: format(end, "yyyy-MM-dd"),
                 };
 
                 console.log("🛸 전송할 값:", eventToSend);

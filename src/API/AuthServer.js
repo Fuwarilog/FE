@@ -1,10 +1,20 @@
 import axios from "axios";
+import { setAccessToken } from "../lib/token";
 
-// Spring 서버에 쿠키 기반 JWT로 사용자 정보 요청
-export const getServerUserInfo  = async (googleAccessToken) => {
-  await axios.post("http://localhost:8080/api/v1/auth/google-login", {
-    accessToken: googleAccessToken, 
-  }, {
-    withCredentials: true, 
+// 구글 accessToken → JWT 발급 → 저장
+export const getServerUserInfo = async (googleAccessToken) => {
+  const res = await axios.post("http://localhost:8080/api/v1/auth/google-login", {
+    accessToken: googleAccessToken,
   });
+
+  const jwtToken = res.data.accessToken;
+  if (!jwtToken) throw new Error("JWT 토큰이 응답에 없습니다.");
+
+  setAccessToken(jwtToken);
+  return res.data;
 };
+
+// 구글 리디렉션 로그인
+export function redirectToGoogleLogin() {
+  window.location.href = "http://localhost:8080/oauth2/authorization/google";
+}

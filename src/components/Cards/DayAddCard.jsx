@@ -64,7 +64,7 @@ export default function DayAddCard({ onAdd }) {
                 </DialogHeader>
                 <div className="space-y-3">
                     <Input
-                        className="border rounded-lg font-gangwon text-lg"
+                        className="border rounded-lg p-2 font-gangwon text-lg"
                         placeholder=" 국가를 입력하세요"
                         value={country}
                         onChange={(e) => setCountry(e.target.value)}

@@ -1,17 +1,13 @@
 import axios from "axios";
+import { getAccessToken } from "../lib/token"; // ✅ 토큰 유틸 import
 
 // ✅ 1. 현재 위치 조회
 export const fetchCurrentLocation = async (latitude, longitude) => {
-  const token = localStorage.getItem("access_token");
+  const body = { latitude, longitude };
 
-  const body = {
-    latitude,
-    longitude,
-  };
-
-  const response = await axios.post("/api/v1/maps/location", body, {
+  const response = await axios.post("http://localhost:8080/api/v1/maps/location", body, {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${getAccessToken()}`,
     },
   });
 
@@ -20,15 +16,11 @@ export const fetchCurrentLocation = async (latitude, longitude) => {
 
 // ✅ 2. 키워드 기반 장소 검색
 export const searchMapKeyword = async (keyword) => {
-  const token = localStorage.getItem("access_token");
-
-  const response = await axios.get(`/api/v1/maps/search`, {
+  const response = await axios.get("http://localhost:8080/api/v1/maps/search", {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${getAccessToken()}`,
     },
-    params: {
-      keyword,
-    },
+    params: { keyword },
   });
 
   return response.data;
@@ -36,17 +28,11 @@ export const searchMapKeyword = async (keyword) => {
 
 // ✅ 3. 경로 탐색
 export const fetchRoute = async (origin, destination, tripDate) => {
-  const token = localStorage.getItem("access_token");
+  const body = { origin, destination, tripDate };
 
-  const body = {
-    origin,
-    destination,
-    tripDate, // string 형식 (예: '2024-06-01')
-  };
-
-  const response = await axios.post(`/api/v1/maps/route`, body, {
+  const response = await axios.post("http://localhost:8080/api/v1/maps/route", body, {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${getAccessToken()}`,
     },
   });
 
@@ -55,16 +41,15 @@ export const fetchRoute = async (origin, destination, tripDate) => {
 
 // ✅ 4. 장소 북마크 추가
 export const addBookmark = async (diaryId, date, placeData) => {
-  const token = localStorage.getItem("access_token");
-
   const response = await axios.post(
-    `/api/v1/diaries/${diaryId}/tags`,
+    `http://localhost:8080/api/v1/maps/bookmarks`,
     placeData,
     {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${getAccessToken()}`,
       },
-      params: { date }, // YYYY-MM-DD
+      withCredentials: true, 
+      params: { date },
     }
   );
 
@@ -73,11 +58,9 @@ export const addBookmark = async (diaryId, date, placeData) => {
 
 // ✅ 5. 장소 북마크 삭제
 export const deleteBookmark = async (locationId) => {
-  const token = localStorage.getItem("access_token");
-
-  const response = await axios.delete(`/api/v1/maps/bookmark`, {
+  const response = await axios.delete("http://localhost:8080/api/v1/maps/bookmark", {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${getAccessToken()}`,
     },
     params: { locationId },
   });

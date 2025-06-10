@@ -1,12 +1,15 @@
-// src/pages/MapPage.jsx
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   GoogleMap,
   LoadScript,
-  Autocomplete,
   DirectionsRenderer,
+  Marker,
 } from "@react-google-maps/api";
-import { fetchRoute } from "../API/Map";
+
+import InfoCard from "../components/Cards/InfoCard";
+import MapTypeToggle from "../components/Map/MapTypeToggle";
+import UnifiedSearchBar from "../components/Map/UnifiedSearchBar";
+import RouteSearchBox from "../components/Map/RouteSearchBox";
 
 const containerStyle = {
   width: "100%",
@@ -22,77 +25,88 @@ const libraries = ["places"];
 
 export default function MapPage() {
   const [map, setMap] = useState(null);
-  const [origin, setOrigin] = useState("");
-  const [destination, setDestination] = useState("");
+  const [searchedPlace, setSearchedPlace] = useState(null);
   const [directions, setDirections] = useState(null);
-  const [autocompleteOrigin, setAutocompleteOrigin] = useState(null);
-  const [autocompleteDestination, setAutocompleteDestination] = useState(null);
-
-  const handleLoadOrigin = (autocomplete) => {
-    setAutocompleteOrigin(autocomplete);
-  };
-
-  const handleLoadDestination = (autocomplete) => {
-    setAutocompleteDestination(autocomplete);
-  };
-
-  const handlePlaceChanged = () => {
-    if (autocompleteOrigin && autocompleteDestination) {
-      const originPlace = autocompleteOrigin.getPlace();
-      const destinationPlace = autocompleteDestination.getPlace();
-      if (originPlace.geometry && destinationPlace.geometry) {
-        setOrigin(originPlace.formatted_address);
-        setDestination(destinationPlace.formatted_address);
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (origin && destination) {
-      const today = new Date().toISOString().slice(0, 10);
-      fetchRoute(origin, destination, today)
-        .then((data) => {
-          console.log("Route info:", data);
-          // setDirections(data); ← DirectionsRenderer에 맞게 변환 필요
-        })
-        .catch((err) => console.error("경로 탐색 실패:", err));
-    }
-  }, [origin, destination]);
+  const [showRouteBox, setShowRouteBox] = useState(false);
 
   return (
     <LoadScript
       googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
       libraries={libraries}
     >
-      <div className="flex">
-        <div className="w-1/4 h-screen bg-gray-100 p-4">
-          <h2 className="font-bold mb-4">경로 검색</h2>
-          <Autocomplete onLoad={handleLoadOrigin} onPlaceChanged={handlePlaceChanged}>
-            <input
-              type="text"
-              placeholder="출발지 입력"
-              className="w-full mb-2 p-2 border border-gray-300 rounded"
-            />
-          </Autocomplete>
-          <Autocomplete onLoad={handleLoadDestination} onPlaceChanged={handlePlaceChanged}>
-            <input
-              type="text"
-              placeholder="도착지 입력"
-              className="w-full mb-2 p-2 border border-gray-300 rounded"
-            />
-          </Autocomplete>
-        </div>
+      <div className="relative w-full h-screen overflow-hidden">
+        {/* 📍 상단 검색 바 */}
+        <UnifiedSearchBar
+          onPlaceSearch={(place) => {
+            console.log("📍 장소 검색 결과:", place);
 
-        <div className="w-3/4">
-          <GoogleMap
-            mapContainerStyle={containerStyle}
-            center={center}
-            zoom={12}
-            onLoad={(mapInstance) => setMap(mapInstance)}
-          >
-            {directions && <DirectionsRenderer directions={directions} />}
-          </GoogleMap>
-        </div>
+            if (!place || !place.lat || !place.lng) return;
+
+            setSearchedPlace(place);        // 장소 상태 저장
+            setDirections(null);            // 경로 검색 초기화
+            map?.panTo({ lat: place.lat, lng: place.lng }); // 지도 이동
+            map?.setZoom(15);               // 확대
+          }}
+          onRouteMode={() => {
+            console.log("경로 검색 모드 진입");
+            setShowRouteBox((prev) => !prev);
+          }}
+        />
+
+        {/* 📦 경로 검색 패널 (지도 위 좌측 오버레이) */}
+        {showRouteBox && (
+          <div className="absolute top-0 left-0 z-50 w-1/4 h-full bg-white shadow-xl overflow-y-auto">
+            <RouteSearchBox
+              map={map}
+              onRouteFetched={(result) => {
+                setDirections(result);
+                setShowRouteBox(false); // 경로 검색 후 닫기
+              }}
+              onClose={() => setShowRouteBox(false)} // ✕ 닫기 버튼 처리
+            />
+          </div>
+        )}
+
+        {/* 🗺️ 지도 전체 100% */}
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={center}
+          zoom={12}
+          onLoad={(mapInstance) => setMap(mapInstance)}
+          options={{
+            mapTypeControl: false,
+            zoomControl: false,
+            streetViewControl: false,
+            fullscreenControl: false,
+            panControl: false,
+            rotateControl: false,
+            scaleControl: false,
+          }}
+        >
+          {/* 📌 마커 */}
+          {searchedPlace && (
+            <Marker
+              position={{
+                lat: searchedPlace.lat,
+                lng: searchedPlace.lng,
+              }}
+            />
+          )}
+
+          {/* 🔁 경로 렌더링 */}
+          {directions && <DirectionsRenderer directions={directions} />}
+        </GoogleMap>
+
+        {/* 🧾 장소 정보 카드 */}
+        {searchedPlace && (
+          <InfoCard
+            place={searchedPlace}
+            onBookmark={() => console.log("북마크 기능")}
+          />
+        )}
+
+        {/* 🛰️ 지도 타입 전환 버튼 */}
+        {!showRouteBox && <MapTypeToggle map={map} />}
       </div>
     </LoadScript>
   );

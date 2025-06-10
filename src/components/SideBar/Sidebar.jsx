@@ -2,17 +2,34 @@ import { useEffect } from "react";
 import GoogleLoginButton from "../ui/GoogleLoginButton";
 import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
+import { getServerUserInfo } from "../../API/AuthServer"; 
 
 export default function Sidebar({ user, setUser }) {
-  const handleLoginSuccess = (userData) => {
-    const user = {
-      name: userData.name,
-      picture: userData.picture,
-    };
-    localStorage.setItem("fuwari-user", JSON.stringify(user));
-    setUser(user);
+  const handleLoginSuccess = async (userData) => {
+  // ✅ 1. googleAccessToken이 userData에 있다고 가정
+  const googleAccessToken = userData.credential || userData.accessToken;
+  if (!googleAccessToken) {
+    console.error("❌ Google AccessToken 없음");
+    return;
+  }
+
+  try {
+    await getServerUserInfo(googleAccessToken); // ✅ 2. JWT 쿠키 요청
+  } catch (err) {
+    console.error("❌ 서버 로그인 실패", err);
+    return;
+  }
+
+  // ✅ 3. 사용자 정보 저장
+  const user = {
+    name: userData.name,
+    picture: userData.picture,
   };
-  
+  localStorage.setItem("fuwari-user", JSON.stringify(user));
+  setUser(user);
+};
+
+
   useEffect(() => {
     const savedUser = localStorage.getItem("fuwari-user");
     if (savedUser && !user) {
@@ -30,7 +47,9 @@ export default function Sidebar({ user, setUser }) {
 
       {/* 로고 */}
       <div className="mb-6">
-        <img src="/fuwari.png" alt="logo" className="w-40" />
+        <Link to="/">
+          <img src="/fuwari.png" alt="logo" className="w-40" />
+        </Link>
       </div>
 
       {/* 모든 버튼 포함 그룹: 메뉴 + 로그인/로그아웃 포함 */}
