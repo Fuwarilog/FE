@@ -73,12 +73,12 @@ export default function DiaryViewPage() {
       {/* 해시태그 영역 */}
       {tags.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-4">
-          {tags.map((tag) => (
+          {tags.map((tag, index) => (
             <span
-              key={tag.id}
-              className="inline-block bg-gray-200 px-2 py-1 rounded-full text-sm"
+              key={index}
+              className="inline-block bg-sky-100 px-2 py-1 rounded-full text-[16px] font-gangwon"
             >
-              #{tag.name}
+              {typeof tag === "string" ? tag : tag.tagText}
             </span>
           ))}
         </div>

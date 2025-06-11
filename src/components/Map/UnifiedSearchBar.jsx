@@ -19,15 +19,16 @@ export default function UnifiedSearchBar({ onPlaceSearch, onRouteMode }) {
           onLoad={(auto) => setAutocomplete(auto)}
           onPlaceChanged={() => {
             if (!autocomplete) return;
-
             const place = autocomplete.getPlace();
+
             if (!place.geometry) return;
 
             const location = {
-              lat: place.geometry.location.lat(),
-              lng: place.geometry.location.lng(),
+              placeId: place.place_id,
               name: place.name,
               address: place.formatted_address,
+              lat: place.geometry.location.lat(),
+              lng: place.geometry.location.lng(),
             };
 
             onPlaceSearch(location); // 지도 이동 및 InfoCard 렌더링
@@ -56,6 +57,6 @@ export default function UnifiedSearchBar({ onPlaceSearch, onRouteMode }) {
           <Navigation size={16} />
         </button>
       </div>
-    </div>
+    </div >
   );
 }

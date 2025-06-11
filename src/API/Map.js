@@ -39,21 +39,17 @@ export const fetchRoute = async (origin, destination, tripDate) => {
   return response.data;
 };
 
-// ✅ 4. 장소 북마크 추가
-export const addBookmark = async (diaryId, date, placeData) => {
-  const response = await axios.post(
-    `http://localhost:8080/api/v1/maps/bookmarks`,
-    placeData,
+
+// ✅ 4. 장소 북마크 추가 (리팩토링된 버전)
+export const addBookmark = async (dto) => {
+  return axios.post(
+    "http://localhost:8080/api/v1/maps/bookmark",
+    dto,
     {
-      headers: {
-        Authorization: `Bearer ${getAccessToken()}`,
-      },
-      withCredentials: true, 
-      params: { date },
+      // 스프링 시큐리티가 쿠키에서 토큰을 꺼내 쓰도록 구현되어 있다면
+      withCredentials: true,
     }
   );
-
-  return response.data;
 };
 
 // ✅ 5. 장소 북마크 삭제

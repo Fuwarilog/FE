@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { ScrollArea } from "../ui/scroll-area";
 import { addBookmark } from "../../API/Map";
 import { fetchAllDiaries } from "../../API/Diary";
 import {
@@ -13,7 +12,6 @@ import {
 
 export default function BookmarkModal({ place, onClose, onBookmark }) {
   const [dayList, setDayList] = useState([]);
-  const [selectedDay, setSelectedDay] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -56,28 +54,42 @@ export default function BookmarkModal({ place, onClose, onBookmark }) {
   }, []);
 
   const handleAdd = async () => {
+    console.log("📍 place:", place);
+
     if (!place) {
       return alert("북마크할 장소 정보가 없습니다.");
     }
-    if (!selectedDay) {
-      return alert("일차를 선택해주세요.");
+
+    const placeId = place.placeId ?? place.place_id ?? place.id;
+    if (!placeId) {
+      return alert("유효한 placeId가 없습니다.");
     }
 
-    // payload: 기존 diaryListId 없으면 tripId+date 로 새 다이어리 생성하도록
-    const payload = {
-      ...place,
-      diaryListId: selectedDay.diaryListId, // null 이더라도 API가 처리하도록
-      tripId: selectedDay.tripId,
-      date: selectedDay.date,
+    const { lat, lng } = place;
+    if (lat == null || lng == null) {
+      return alert("유효한 위치 정보가 없습니다.");
+    }
+
+    const address = place.address ?? place.formatted_address ?? "";
+    const url = place.url ?? "";
+
+    const dto = {
+      placeId,
+      name: place.name,
+      url,
+      address,
+      latitude: lat,
+      longitude: lng,
     };
 
     try {
-      await addBookmark(payload);
+      await addBookmark(dto);
+      alert("✅ 오늘 다이어리에 북마크가 저장되었습니다.");
       onBookmark();
       onClose();
     } catch (err) {
-      console.error(err);
-      alert("북마크 저장에 실패했습니다.");
+      console.error("북마크 저장 실패:", err.response?.data || err.message);
+      alert(`저장 중 오류가 발생했습니다:\n${err.response?.data?.message || err.message}`);
     }
   };
 
@@ -87,36 +99,10 @@ export default function BookmarkModal({ place, onClose, onBookmark }) {
         <DialogHeader>
           <DialogTitle>북마크 추가</DialogTitle>
         </DialogHeader>
-        <p className="text-sm text-muted-foreground mb-2">
-          북마크할 일차를 선택하세요
+        <p className="text-sm text-muted-foreground mb-4">
+          선택한 장소가 <strong>오늘의 여행 일지</strong>에 자동으로 북마크됩니다.
         </p>
-        <ScrollArea className="h-[200px] border rounded-md mb-4 p-2">
-          {isLoading ? (
-            <p className="text-center text-muted-foreground py-10">
-              일정 불러오는 중...
-            </p>
-          ) : error ? (
-            <p className="text-center text-red-500 py-10">{error}</p>
-          ) : (
-            dayList.map(item => (
-              <div
-                key={`${item.tripId}-${item.date}`}
-                onClick={() => setSelectedDay(item)}
-                className={`p-2 rounded-md cursor-pointer hover:bg-accent ${
-                  selectedDay?.tripId === item.tripId &&
-                  selectedDay?.date === item.date
-                    ? "bg-blue-100 dark:bg-blue-800"
-                    : ""
-                }`}
-              >
-                <p className="text-sm font-medium">
-                  {item.tripTitle} - {item.dayIndex}일차
-                </p>
-                <p className="text-xs text-muted-foreground">{item.date}</p>
-              </div>
-            ))
-          )}
-        </ScrollArea>
+
         <div className="flex justify-end gap-2">
           <Button variant="ghost" onClick={onClose}>
             취소

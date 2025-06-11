@@ -1,9 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getPublicPosts } from "../../lib/getPublicPosts";
+import { setDiaryPublic, fetchDiaryContent as fetchPostDetail } from "../../API/Diary";
 import { Button } from "../../components/ui/button";
-
-import { com, getDiaryContent, mockUser, saveDiaryContent } from "../../data/sample";
 
 export default function CommunityDetail() {
   const { id } = useParams();
@@ -18,45 +16,37 @@ export default function CommunityDetail() {
         tripTitle: post.tripTitle,
         date: isoDate,
         dayIndex: post.dayIndex,
+        diaryListId: post.diaryListId, // 실제 ID 사용
       },
     });
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     const confirmDelete = window.confirm("정말 비공개로 전환하시겠습니까?");
-    if (confirmDelete) {
-      // 공개 여부 false로 바꾸기
-      const existing = getDiaryContent(post.date);
-      saveDiaryContent(post.date, {
-        ...existing,
-        isPublic: false,
-      });
+    if (!confirmDelete) return;
 
+    try {
+      await setDiaryPublic(post.diaryListId, false);
       alert("비공개로 전환되었습니다.");
       navigate("/community", { state: { forceReload: true } });
+    } catch (err) {
+      console.error("비공개 전환 실패", err);
+      alert("⚠️ 처리에 실패했습니다.");
     }
   };
 
-
   useEffect(() => {
-    const allPosts = [...com, ...getPublicPosts()];
-    const found = allPosts.find((p) => String(p.id) === String(id));
+    const load = async () => {
+      try {
+        const res = await fetchPostDetail(id);
+        setPost(res.data);
+      } catch (err) {
+        console.error("게시글 불러오기 실패", err);
+      }
+    };
 
-    if (found) {
-      found.views += 1;
-
-      // 업데이트된 게시글을 localStorage에 저장
-      const diaryPosts = getPublicPosts();
-      const updatedPosts = diaryPosts.map((p) =>
-        String(p.id) === String(id) ? { ...p, views: p.views + 1 } : p
-      );
-
-      localStorage.setItem("diaryPosts", JSON.stringify(updatedPosts));
-      setPost({ ...found });
-    }
+    load();
   }, [id]);
-
-
 
   if (!post) {
     return (
@@ -83,12 +73,11 @@ export default function CommunityDetail() {
           <span>🔖 북마크 {post.bookmarks || 0}</span>
         </div>
 
-        {/* 내가 쓴 글이면 수정/삭제 */}
-        {post.userName === mockUser.name && (
+        {post.isMine && (
           <div className="flex gap-2">
             <Button
               onClick={handleEdit}
-              className="rounded-full px-6 !py-0.5  bg-sky-200 hover:bg-sky-100 text-gray-700 !text-base"
+              className="rounded-full px-6 !py-0.5 bg-sky-200 hover:bg-sky-100 text-gray-700 !text-base"
             >
               수정
             </Button>

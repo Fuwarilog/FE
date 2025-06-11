@@ -40,12 +40,12 @@ export default function MapPage() {
           onPlaceSearch={(place) => {
             console.log("📍 장소 검색 결과:", place);
 
-            if (!place || !place.lat || !place.lng) return;
+            if (!place || place.lat == null || place.lng == null) return;
 
-            setSearchedPlace(place);        // 장소 상태 저장
-            setDirections(null);            // 경로 검색 초기화
-            map?.panTo({ lat: place.lat, lng: place.lng }); // 지도 이동
-            map?.setZoom(15);               // 확대
+            setSearchedPlace(place);
+            setDirections(null);
+            map?.panTo({ lat: place.lat, lng: place.lng, });
+            map?.setZoom(15);
           }}
           onRouteMode={() => {
             console.log("경로 검색 모드 진입");

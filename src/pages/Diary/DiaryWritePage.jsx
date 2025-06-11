@@ -17,15 +17,11 @@ export default function DiaryWritePage() {
     dayIndex,
     diaryListId,
     imageUrls: initImageUrls = [],
-    tags: initTags = [],
   } = location.state || {};
 
   const [title, setTitle] = useState(tripTitle || "");
   const [isPublic, setIsPublic] = useState(true);
-  // initTags가 객체 배열이면 name만 꺼내고, 문자열 배열이면 그대로
-  const [tags, setTags] = useState(() =>
-    initTags.map((t) => (typeof t === "string" ? t : t.name))
-  );
+  const [tags, setTags] = useState([]);
   const [content, setContent] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(initImageUrls[0] || "");
@@ -38,12 +34,11 @@ export default function DiaryWritePage() {
         const res = await fetchDiaryContent(diaryListId);
         const data = res.data;
 
-        if (data) {
+        if (data?.content !== null) {
           setTitle(data.title ?? tripTitle);
-          setContent(data.content ?? "");
+          setContent(data.content);
           setIsPublic(data.isPublic ?? true);
-          // 서버에서 tags가 [{id,name},…] 형태로 오면 name만 꺼내기
-          setTags((data.tags || []).map((t) => (typeof t === "string" ? t : t.name)));
+          setTags(data.tags ?? []);
           if (data.imageUrls && data.imageUrls.length > 0) {
             setPreviewUrl(data.imageUrls[0]);
           }
@@ -53,8 +48,8 @@ export default function DiaryWritePage() {
         console.warn("다이어리 없음 (초기 작성 상태)", err);
       }
 
-      // 새로 작성하는 경우 초기화
-      setTitle(tripTitle ?? "");
+      // 초기 상태
+      setTitle(tripTitle ?? "새 여행기");
       setContent("");
       setIsPublic(true);
       setTags([]);
@@ -74,19 +69,20 @@ export default function DiaryWritePage() {
 
   const handleSave = async () => {
     try {
-      // FormData로 묶어서 보내야 파일+텍스트 같이 전송 가능
-      const form = new FormData();
-      form.append("content", content);
-      form.append("isPublic", isPublic);
-      tags.forEach((tagName) => form.append("tags", tagName));
-      if (imageFile) {
-        form.append("image", imageFile);
-      }
+      const diaryData = {
+        content,
+        imageFile,
+      };
 
-      await editDiaryContent(diaryListId, form);
+      await editDiaryContent(diaryListId, diaryData);
 
       navigate("/diary/view", {
-        state: { tripTitle: title, date, dayIndex, diaryListId },
+        state: {
+          tripTitle: title,
+          date,
+          dayIndex,
+          diaryListId,
+        },
       });
     } catch (error) {
       console.error("저장 실패", error);
@@ -97,8 +93,7 @@ export default function DiaryWritePage() {
   const handleCancel = () => navigate(-1);
 
   return (
-    <div className="p-6 space-y-6">
-      {/* 헤더 */}
+    <div className="p-6 space-y-4">
       <div className="flex justify-between items-center">
         <div className="flex flex-col gap-1">
           <span className="text-2xl font-gangwon font-semibold">{dayIndex}일차 기록</span>
@@ -110,19 +105,23 @@ export default function DiaryWritePage() {
         <div className="flex items-center gap-4">
           <label className="cursor-pointer bg-gray-100 px-3 py-1 rounded-md text-base font-gangwon text-gray-700">
             사진 추가
-            <input type="file" accept="image/*" onChange={handleImageChange} hidden />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              hidden
+            />
           </label>
 
           <div className="flex items-center gap-1">
-            <Switch id="public-switch" checked={isPublic} onCheckedChange={setIsPublic} />
-            <Label htmlFor="public-switch" className="text-base font-gangwon text-gray-600">
+            <Switch id="공개설정" checked={isPublic} onCheckedChange={setIsPublic} />
+            <Label htmlFor="공개설정" className="text-base font-gangwon text-gray-600">
               {isPublic ? "공개" : "비공개"}
             </Label>
           </div>
         </div>
       </div>
 
-      {/* 제목 입력 */}
       <input
         type="text"
         value={title}
@@ -131,21 +130,17 @@ export default function DiaryWritePage() {
         className="w-full px-4 py-2 border border-gray-300 rounded-xl text-lg font-gangwon shadow"
       />
 
-      {/* 해시태그 영역 */}
-      {tags.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {tags.map((tag, idx) => (
-            <span
-              key={idx}
-              className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-base font-gangwon shadow-sm"
-            >
-              #{tag}
-            </span>
-          ))}
-        </div>
-      )}
+      <div className="flex flex-wrap gap-2">
+        {tags.map((tag, index) => (
+          <span
+            key={index}
+            className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-base font-gangwon shadow-sm"
+          >
+            {typeof tag === "string" ? tag : tag.tagText}
+          </span>
+        ))}
+      </div>
 
-      {/* 본문 */}
       <Textarea
         placeholder="여행의 순간을 기록해보세요..."
         value={content}
@@ -153,12 +148,14 @@ export default function DiaryWritePage() {
         className="min-h-[300px] rounded-2xl border-gray-200 bg-white/60 backdrop-blur-sm shadow-inner px-5 py-4 text-xl font-gangwon placeholder:text-gray-400"
       />
 
-      {/* 이미지 미리보기 */}
       {previewUrl && (
-        <img src={previewUrl} alt="미리보기" className="w-20 h-20 rounded-md ml-2 mt-2" />
+        <img
+          src={previewUrl}
+          alt="미리보기"
+          className="w-20 h-20 rounded-md ml-2 mt-2"
+        />
       )}
 
-      {/* 저장/취소 */}
       <div className="flex justify-end gap-4">
         <Button
           onClick={handleSave}

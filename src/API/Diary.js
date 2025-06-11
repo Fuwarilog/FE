@@ -66,7 +66,7 @@ export const editDiaryContent = async (diaryListId, diaryData) => {
 // 공개여부 설정
 export const setDiaryPublic = async (diaryListId, isPublic) => {
   return await axios.post(
-    `/api/v1/diaries/content/${diaryListId}?isPublic=${isPublic}`,
+    `http://localhost:8080/api/v1/diaries/content/${diaryListId}?isPublic=${isPublic}`,
     {},
     {
       headers: {
