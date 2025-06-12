@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, Navigation, Search } from "lucide-react";
 import { Autocomplete } from "@react-google-maps/api";
 
@@ -6,9 +6,40 @@ export default function UnifiedSearchBar({ onPlaceSearch, onRouteMode }) {
   const [input, setInput] = useState("");
   const [autocomplete, setAutocomplete] = useState(null);
 
+  useEffect(() => {
+    let animationFrameId;
+
+    const fixPacPosition = () => {
+      const pacList = document.querySelectorAll(".pac-container");
+      const input = document.getElementById("search-input");
+
+      if (input && pacList.length > 0) {
+        const rect = input.getBoundingClientRect();
+
+        pacList.forEach((pac, idx) => {
+          if (idx === 0) {
+            pac.style.display = input.value.trim() ? "block" : "none";
+            pac.style.position = "absolute";
+            pac.style.top = `${rect.bottom + window.scrollY + 15}px`;
+            pac.style.left = `${rect.left + window.scrollX -78}px`;
+            pac.style.width = `${rect.width}px`;
+            pac.style.zIndex = "9999";
+          } else {
+            pac.style.display = "none";
+          }
+        });
+      }
+
+      animationFrameId = requestAnimationFrame(fixPacPosition);
+    };
+
+    animationFrameId = requestAnimationFrame(fixPacPosition);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, []);
+
   return (
     <div className="absolute top-4 left-4 z-50 w-[300px] pointer-events-auto">
-      <div className="flex items-center bg-white shadow rounded-md px-3 py-2 border border-gray-300">
+       <div className="flex items-center gap-3 w-full max-w-[500px] font-gangwon text-[18px] bg-white shadow-md rounded-full px-4 py-2 border border-gray-200">
         {/* ☰ 메뉴 버튼 */}
         <button className="p-2">
           <Menu size={20} />
@@ -31,11 +62,12 @@ export default function UnifiedSearchBar({ onPlaceSearch, onRouteMode }) {
               lng: place.geometry.location.lng(),
             };
 
-            onPlaceSearch(location); // 지도 이동 및 InfoCard 렌더링
-            setInput(place.formatted_address); // 입력창 반영
+            onPlaceSearch(location);
+            setInput(place.formatted_address);
           }}
         >
           <input
+            id="search-input"
             type="text"
             placeholder="장소를 검색하세요"
             value={input}
@@ -44,7 +76,7 @@ export default function UnifiedSearchBar({ onPlaceSearch, onRouteMode }) {
           />
         </Autocomplete>
 
-        {/* 🔍 검색 아이콘 (기능 제거 또는 선택 전까지 비활성화) */}
+        {/* 🔍 비활성화된 검색 버튼 */}
         <button className="p-2 text-gray-400 cursor-default" disabled>
           <Search size={18} />
         </button>
@@ -57,6 +89,6 @@ export default function UnifiedSearchBar({ onPlaceSearch, onRouteMode }) {
           <Navigation size={16} />
         </button>
       </div>
-    </div >
+    </div>
   );
 }

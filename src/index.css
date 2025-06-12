@@ -88,3 +88,52 @@ a.fc-daygrid-event .fc-event-main  {
   font-family: 'GangwonEduSaeeum_OTFMediumA' !important;
   font-size: 17px !important;
 }
+
+
+/* 구글 맵 자동완성 스타일 - 구글 기본 UI 느낌 */
+.pac-container {
+  font-family: 'GangwonEduSaeeum_OTFMediumA', sans-serif !important;
+  font-size: 14px !important;
+
+  width: 100% !important;
+  max-width: 300px !important;
+  min-width: 300px !important;
+
+  z-index: 9999 !important;
+
+  border-radius: 12px !important;  /* ← 원하는 값으로 조절 가능 */
+}
+
+.pac-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;            /* 아이콘과 텍스트 간격 */
+  padding: 6px 10px !important;
+  line-height: 1.4 !important;
+  font-family: 'GangwonEduSaeeum_OTFMediumA', sans-serif !important;
+}
+
+.pac-item-query {
+  font-weight: 600 !important;
+  display: inline !important;
+}
+
+
+.pac-icon {
+  flex-shrink: 0 !important;
+  width: 20px !important;
+  height: 20px !important;
+  margin: 0 !important;
+}
+
+.pac-item > span {
+  color: #666 !important;
+  font-size: 13px !important;
+}
+
+.pac-logo {
+  padding: 0 !important;
+  margin: 4px auto 2px auto !important;
+}
+
+
