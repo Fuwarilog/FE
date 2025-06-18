@@ -53,12 +53,18 @@ export const addBookmark = async (dto) => {
 };
 
 // ✅ 5. 장소 북마크 삭제
-export const deleteBookmark = async (locationId) => {
+// 📁 src/API/Map.js
+
+export const deleteBookmark = async ({ name, latitude, longitude, diaryListId, placeId }) => {
   const response = await axios.delete("http://localhost:8080/api/v1/maps/bookmark", {
-    headers: {
-      Authorization: `Bearer ${getAccessToken()}`,
+    withCredentials: true, // ✅ 쿠키 인증 방식 사용
+    data: {
+      name,
+      latitude,
+      longitude,
+      diaryListId,
+      placeId,
     },
-    params: { locationId },
   });
 
   return response.data;

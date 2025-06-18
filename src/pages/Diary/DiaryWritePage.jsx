@@ -5,7 +5,7 @@ import { Switch } from "../../components/ui/switch";
 import { Label } from "../../components/ui/label";
 import { Textarea } from "../../components/ui/textarea";
 import { Button } from "../../components/ui/button";
-import { fetchDiaryContent, editDiaryContent } from "../../API/Diary";
+import { fetchDiaryContent, editDiaryContent, setDiaryPublic } from "../../API/Diary";
 
 export default function DiaryWritePage() {
   const location = useLocation();
@@ -16,6 +16,7 @@ export default function DiaryWritePage() {
     date,
     dayIndex,
     diaryListId,
+    tags: initialTags = [],
     imageUrls: initImageUrls = [],
   } = location.state || {};
 
@@ -34,15 +35,25 @@ export default function DiaryWritePage() {
         const res = await fetchDiaryContent(diaryListId);
         const data = res.data;
 
+        console.log("다이어리 내용", data);
         if (data?.content !== null) {
           setTitle(data.title ?? tripTitle);
           setContent(data.content);
           setIsPublic(data.isPublic ?? true);
-          setTags(data.tags ?? []);
+          setTags(
+            Array.isArray(data.tags)
+              ? data.tags.map((t) =>
+                typeof t === "string"
+                  ? t
+                  : t.tagText || t.placeName || t.name || "이름없음"
+              )
+              : []
+          );
+
           if (data.imageUrls && data.imageUrls.length > 0) {
             setPreviewUrl(data.imageUrls[0]);
           }
-          return;
+          return; 
         }
       } catch (err) {
         console.warn("다이어리 없음 (초기 작성 상태)", err);
@@ -75,6 +86,8 @@ export default function DiaryWritePage() {
       };
 
       await editDiaryContent(diaryListId, diaryData);
+
+      await setDiaryPublic(diaryListId, isPublic);
 
       navigate("/diary/view", {
         state: {
@@ -130,16 +143,16 @@ export default function DiaryWritePage() {
         className="w-full px-4 py-2 border border-gray-300 rounded-xl text-lg font-gangwon shadow"
       />
 
-      <div className="flex flex-wrap gap-2">
-        {tags.map((tag, index) => (
-          <span
-            key={index}
-            className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-base font-gangwon shadow-sm"
-          >
-            {typeof tag === "string" ? tag : tag.tagText}
-          </span>
-        ))}
-      </div>
+      {/* 해시태그 영역 */}
+      {tags.map((tag, index) => (
+        <span
+          key={index}
+          className="inline-block bg-sky-100 px-2 py-1 rounded-full text-[16px] font-gangwon"
+        >
+          {typeof tag === "string" ? tag : tag.tagText}
+        </span>
+      ))}
+
 
       <Textarea
         placeholder="여행의 순간을 기록해보세요..."

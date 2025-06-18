@@ -1,5 +1,5 @@
 import { redirectToGoogleLogin } from "../../API/AuthServer"; 
-import { Button } from "./button"; // shadcn의 버튼 컴포넌트
+import { Button } from "../ui/button"; // shadcn의 버튼 컴포넌트
 
 export default function GoogleLoginButton() {
   

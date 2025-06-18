@@ -71,32 +71,26 @@ export default function DiaryViewPage() {
       </div>
 
       {/* 해시태그 영역 */}
-      {tags.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-4">
-          {tags.map((tag, index) => (
-            <span
-              key={index}
-              className="inline-block bg-sky-100 px-2 py-1 rounded-full text-[16px] font-gangwon"
-            >
-              {typeof tag === "string" ? tag : tag.tagText}
-            </span>
-          ))}
-        </div>
-      )}
+      {tags.map((tag, index) => (
+        <span
+          key={index}
+          className="inline-block bg-sky-100 px-2 py-1 rounded-full text-[16px] font-gangwon"
+        >
+          {typeof tag === "string" ? tag : tag.tagText}
+        </span>
+      ))}
+
 
       {/* 이미지 갤러리 */}
-      {imageUrls.length > 0 && (
-        <div className="flex flex-wrap gap-4 mt-4 mb-4">
-          {imageUrls.map((url, idx) => (
-            <img
-              key={idx}
-              src={url}
-              alt={`diary-img-${idx}`}
-              className="w-48 h-auto rounded shadow"
-            />
-          ))}
-        </div>
-      )}
+      {imageUrls.map((url, idx) => (
+        <img
+          key={idx}
+          src={url}
+          alt={`diary-img-${idx}`}
+          className="w-48 h-auto rounded shadow"
+        />
+      ))}
+
 
       {/* 본문 */}
       <div className="mt-4 p-4 border font-gangwon border-gray-200 rounded-md bg-gray-50 min-h-[200px] whitespace-pre-wrap">

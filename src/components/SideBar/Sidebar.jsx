@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import GoogleLoginButton from "../ui/GoogleLoginButton";
+import GoogleLoginButton from "../Auth/GoogleLoginButton";
 import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
 import { getServerUserInfo } from "../../API/AuthServer"; 

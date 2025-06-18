@@ -16,7 +16,14 @@ export default function CommunityPage() {
     const loadPosts = async () => {
       try {
         const res = await fetchPosts();
+
         console.log("📥 posts 확인:", res.data);
+        res.data.forEach((post, idx) => {
+        console.log(
+          `🧾 [${idx + 1}] id: ${post.id}, title: ${post.title}, userName: ${post.userName}, created: ${post.createdDate}`
+        );
+      });
+
         setPosts(res.data);
         window.history.replaceState({}, document.title);
       } catch (err) {

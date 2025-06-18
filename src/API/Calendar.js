@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getAccessToken } from "../lib/token"; // ✅ 유틸 함수 import
+import { getAccessToken } from "../lib/token"; 
 
 // ✅ 일정 조회: 특정 tripId에 대한 일정 정보 가져오기
 export const fetchCalendarEvents = async (tripId) => {
@@ -40,7 +40,7 @@ export const fetchTripsByMonth = async (year, month) => {
 
   return await axios.get(url, {
     headers: {
-      Authorization: `Bearer ${getAccessToken()}`, // ✅ 리팩토링
+      Authorization: `Bearer ${getAccessToken()}`, 
     },
     withCredentials: true,
   });

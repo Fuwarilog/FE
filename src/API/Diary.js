@@ -65,16 +65,21 @@ export const editDiaryContent = async (diaryListId, diaryData) => {
 
 // 공개여부 설정
 export const setDiaryPublic = async (diaryListId, isPublic) => {
+  const url = `http://localhost:8080/api/v1/diaries/content/${diaryListId}?isPublic=${isPublic}`;
+
   return await axios.post(
-    `http://localhost:8080/api/v1/diaries/content/${diaryListId}?isPublic=${isPublic}`,
-    {},
+    url,
+    null, 
     {
+      withCredentials: true, 
       headers: {
-        Authorization: `Bearer ${getAccessToken()}`,
+        "Content-Type": undefined, 
       },
     }
   );
 };
+
+
 
 // 특정 여행(tripId)에 해당하는 일차별 다이어리 리스트 조회
 export const fetchDiaryList = async (diaryListId) => {

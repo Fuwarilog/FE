@@ -15,11 +15,8 @@ export const fetchPosts = async () => {
 export const editPostBookmark = async (postId) => {
   return await axios.post(
     `http://localhost:8080/api/v1/posts/bookmarks/${postId}`,
-    {},
+    null,
     {
-      headers: {
-        Authorization: `Bearer ${getAccessToken()}`,
-      },
       withCredentials: true,
     }
   );
@@ -29,11 +26,8 @@ export const editPostBookmark = async (postId) => {
 export const editPostLikes = async (postId) => {
   return await axios.post(
     `http://localhost:8080/api/v1/posts/likes/${postId}`,
-    {},
+    null,
     {
-      headers: {
-        Authorization: `Bearer ${getAccessToken()}`,
-      },
       withCredentials: true,
     }
   );

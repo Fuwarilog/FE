@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   GoogleMap,
   LoadScript,
@@ -10,6 +10,9 @@ import InfoCard from "../components/Cards/InfoCard";
 import MapTypeToggle from "../components/Map/MapTypeToggle";
 import UnifiedSearchBar from "../components/Map/UnifiedSearchBar";
 import RouteSearchBox from "../components/Map/RouteSearchBox";
+
+import { fetchAllDiaries } from "../API/Diary";
+import { format } from "date-fns";
 
 const containerStyle = {
   width: "100%",
@@ -29,13 +32,45 @@ export default function MapPage() {
   const [directions, setDirections] = useState(null);
   const [showRouteBox, setShowRouteBox] = useState(false);
 
+  const [tags, setTags] = useState([]);
+  const [diaryListId, setDiaryListId] = useState(null);
+
+  // 오늘 다이어리 정보 불러오기
+  const loadTodayDiary = async () => {
+    try {
+      const today = format(new Date(), "yyyy-MM-dd");
+      const result = await fetchAllDiaries();
+
+      for (const trip of result.data) {
+        const found = trip.diaries?.find((d) => d.startDate === today);
+        if (found) {
+          setTags(found.tags ?? []);
+          setDiaryListId(found.id);
+          break;
+        }
+      }
+    } catch (err) {
+      console.error("❌ 다이어리 로딩 실패:", err);
+    }
+  };
+  
+  useEffect(() => {
+    loadTodayDiary();
+  }, []);
+
+  // ✅ 북마크 후 상태 동기화
+  const handleBookmarkToggle = async () => {
+    await loadTodayDiary(); // ✅ 서버에서 최신 tags와 diaryListId 다시 받아오기
+  };
+
+
   return (
     <LoadScript
       googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
       libraries={libraries}
     >
       <div className="relative w-full h-screen overflow-hidden">
-        {/* 📍 상단 검색 바 */}
+        {/* 🔍 검색 바 */}
         <UnifiedSearchBar
           onPlaceSearch={(place) => {
             console.log("📍 장소 검색 결과:", place);
@@ -44,7 +79,7 @@ export default function MapPage() {
 
             setSearchedPlace(place);
             setDirections(null);
-            map?.panTo({ lat: place.lat, lng: place.lng, });
+            map?.panTo({ lat: place.lat, lng: place.lng });
             map?.setZoom(15);
           }}
           onRouteMode={() => {
@@ -53,21 +88,21 @@ export default function MapPage() {
           }}
         />
 
-        {/* 📦 경로 검색 패널 (지도 위 좌측 오버레이) */}
+        {/* 📦 경로 검색 패널 */}
         {showRouteBox && (
           <div className="absolute top-0 left-0 z-50 w-1/4 h-full bg-white shadow-xl overflow-y-auto">
             <RouteSearchBox
               map={map}
               onRouteFetched={(result) => {
                 setDirections(result);
-                setShowRouteBox(false); // 경로 검색 후 닫기
+                setShowRouteBox(false);
               }}
-              onClose={() => setShowRouteBox(false)} // ✕ 닫기 버튼 처리
+              onClose={() => setShowRouteBox(false)}
             />
           </div>
         )}
 
-        {/* 🗺️ 지도 전체 100% */}
+        {/* 🗺️ 지도 */}
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={center}
@@ -83,7 +118,7 @@ export default function MapPage() {
             scaleControl: false,
           }}
         >
-          {/* 📌 마커 */}
+          {/* 📌 장소 마커 */}
           {searchedPlace && (
             <Marker
               position={{
@@ -97,15 +132,17 @@ export default function MapPage() {
           {directions && <DirectionsRenderer directions={directions} />}
         </GoogleMap>
 
-        {/* 🧾 장소 정보 카드 */}
-        {searchedPlace && (
+        {/* 🧾 장소 카드 */}
+        {searchedPlace && diaryListId && (
           <InfoCard
             place={searchedPlace}
-            onBookmark={() => console.log("북마크 기능")}
+            diaryListId={diaryListId}
+            tags={tags}  
+            onBookmark={handleBookmarkToggle}
           />
         )}
 
-        {/* 🛰️ 지도 타입 전환 버튼 */}
+        {/* 🛰️ 지도 타입 토글 */}
         {!showRouteBox && <MapTypeToggle map={map} />}
       </div>
     </LoadScript>
