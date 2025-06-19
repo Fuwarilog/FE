@@ -17,7 +17,7 @@ export default function DiaryPage() {
   useEffect(() => {
     const loadTrips = async () => {
       try {
-        const res = await fetchAllDiaries();
+        const res = await fetchAllDiaries(true);
         const grouped = groupTripsByYear(res.data);
         setGroupedTrips(grouped);
       } catch (err) {

@@ -15,16 +15,14 @@ export default function CommunityPage() {
   useEffect(() => {
     const loadPosts = async () => {
       try {
-        const res = await fetchPosts();
+        const allPosts  = await fetchPosts();
 
-        console.log("📥 posts 확인:", res.data);
-        res.data.forEach((post, idx) => {
-        console.log(
-          `🧾 [${idx + 1}] id: ${post.id}, title: ${post.title}, userName: ${post.userName}, created: ${post.createdDate}`
-        );
-      });
+        console.log("📥 posts 확인:", allPosts);
+        allPosts.forEach((post, idx) => {
+          console.log(`[${idx}] id: ${post.id}, title: ${post.title}`);
+        });
 
-        setPosts(res.data);
+        setPosts(allPosts );
         window.history.replaceState({}, document.title);
       } catch (err) {
         console.error("게시글 목록 불러오기 실패", err);
@@ -55,14 +53,21 @@ export default function CommunityPage() {
             <tr
               key={`${post.id || post.diaryListId || index}`}
               className="border-b hover:bg-indigo-50 cursor-pointer"
-              onClick={() => navigate(`/community/post/${post.id}`)}
+              onClick={() =>
+                
+                navigate(`/community/post/${post.id}`, {
+                  state: {
+                    Id: post.id, // 좋아요/북마크용 postId 따로 전달
+                  },
+                })
+              }
             >
               <td className="px-3 py-2 text-center">{indexOfFirstPost + index + 1}</td>
               <td className="px-3 py-2 text-gray-700">{post.title}</td>
               <td className="px-3 py-2">{post.userName}</td>
               <td className="px-3 py-2">{post.createdDate?.substring(0, 10)}</td>
-              <td className="px-3 py-2 text-center">{post.views}</td>
-              <td className="px-3 py-2 text-center">{post.likes}</td>
+              <td className="px-3 py-2 text-center">{post.watchCount}</td>
+              <td className="px-3 py-2 text-center">{post.likesCount}</td>
             </tr>
           ))}
         </tbody>

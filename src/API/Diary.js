@@ -1,14 +1,26 @@
 import axios from "axios";
 import { getAccessToken } from "../lib/token";
 
-// 모든 다이어리 폴더 조회
-export const fetchAllDiaries = async () => {
-  return await axios.get("http://localhost:8080/api/v1/diaries", {
+// 1. 모든 다이어리 폴더 조회
+export const fetchAllDiaries = async (returnRaw = false) => {
+  const res = await axios.get("http://localhost:8080/api/v1/diaries", {
     withCredentials: true,
   });
+  return returnRaw ? res : res.data;
 };
 
-// 특정 날짜의 다이어리 조회
+// 2. 다이어리 폴더 내의 목록 조회
+export const fetchPublicDiaryLists = async (diaryId) => {
+  const url = `http://localhost:8080/api/v1/diaries/${diaryId}?isPublic=true`;
+
+  const res = await axios.get(url, {
+    withCredentials: true,
+  });
+
+  return res.data;
+};
+
+// 3. 다이어리 내용 조회
 export const fetchDiaryContent = async (diaryListId) => {
   const url = `http://localhost:8080/api/v1/diaries/content/${diaryListId}`;
   const token = getAccessToken();
@@ -21,7 +33,7 @@ export const fetchDiaryContent = async (diaryListId) => {
   });
 };
 
-// 다이어리 내용 작성
+// 4. 다이어리 내용 수정
 export const editDiaryContent = async (diaryListId, diaryData) => {
   const { content, imageFile } = diaryData;
 
@@ -63,7 +75,7 @@ export const editDiaryContent = async (diaryListId, diaryData) => {
 };
 
 
-// 공개여부 설정
+// 7. 다이어리 공개여부 설정 기능
 export const setDiaryPublic = async (diaryListId, isPublic) => {
   const url = `http://localhost:8080/api/v1/diaries/content/${diaryListId}?isPublic=${isPublic}`;
 

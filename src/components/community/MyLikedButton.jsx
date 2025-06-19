@@ -13,12 +13,14 @@ export default function MyLikedButton({
   const [isLoading, setIsLoading] = useState(false);
 
   const handleClick = async () => {
+    console.log("좋아요 버튼 클릭됨!", postId, typeof postId);
+
     if (!postId) return;
     setIsLoading(true);
 
     try {
-      await editPostLikes(postId); // ✅ 좋아요 토글 API 호출
-
+      const res = await editPostLikes(postId); // ✅ 좋아요 토글 API 호출
+      console.log("✅ 좋아요 응답 내용:", res?.data)
       const newLiked = !liked;
       setLiked(newLiked);
       setLikeCount((prev) => prev + (newLiked ? 1 : -1));

@@ -1,8 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-import { fetchPosts } from "../../API/Community";
-import { setDiaryPublic, fetchDiaryContent as fetchPostDetail } from "../../API/Diary";
+import { fetchPostDetail } from "../../API/Community";
+import { setDiaryPublic } from "../../API/Diary";
 
 import { Button } from "../../components/ui/button";
 import { format, parseISO } from "date-fns";
@@ -16,17 +16,17 @@ import { getUserInfo } from "../../API/Auth";
 export default function CommunityDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+
   const [post, setPost] = useState(null);
-  const [postMeta, setPostMeta] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
 
+  // 1. 사용자 정보 로딩
   useEffect(() => {
-    // 사용자 정보 불러오기
     const loadUser = async () => {
       try {
         const user = await getUserInfo();
         setCurrentUser(user);
-      } catch (err) {
+      } catch {
         console.warn("로그인 안 됨 / JWT 없음");
         setCurrentUser(null);
       }
@@ -34,27 +34,26 @@ export default function CommunityDetail() {
     loadUser();
   }, []);
 
-  // 메타 데이터
+  // 2. 게시글 상세 정보 로딩 (postId 기반)
   useEffect(() => {
-    const loadMeta = async () => {
+    const loadPost = async () => {
       try {
-        const res = await fetchPosts(); // 전체 게시글 불러오기
-        const matched = res.data.find((item) => String(item.id) === id); // id는 useParams에서 받은 postId
-        setPostMeta(matched);
+        const res = await fetchPostDetail(id);
+        console.log("📦 post detail:", res.data); 
+        setPost(res.data);
       } catch (err) {
-        console.error("게시글 메타정보 불러오기 실패", err);
+        console.error("게시글 불러오기 실패", err);
       }
     };
-
-    loadMeta();
+    if (id) loadPost();
   }, [id]);
-  // 수정
+
   const handleEdit = () => {
-    const isoDate = post.tripDate.replace(/\./g, "-");
+    const isoDate = post.date.replace(/\./g, "-");
 
     navigate("/diary/write", {
       state: {
-        tripTitle: post.tripTitle,
+        tripTitle: post.title,
         date: isoDate,
         dayIndex: post.dayIndex,
         diaryListId: post.diaryListId,
@@ -62,11 +61,8 @@ export default function CommunityDetail() {
     });
   };
 
-  // 삭제 -> 비공개전환
   const handleDelete = async () => {
-    const confirmDelete = window.confirm("정말 비공개로 전환하시겠습니까?");
-    if (!confirmDelete) return;
-
+    if (!window.confirm("정말 비공개로 전환하시겠습니까?")) return;
     try {
       await setDiaryPublic(post.diaryListId, false);
       alert("비공개로 전환되었습니다.");
@@ -76,18 +72,6 @@ export default function CommunityDetail() {
       alert("⚠️ 처리에 실패했습니다.");
     }
   };
-
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const res = await fetchPostDetail(id);
-        setPost(res.data);
-      } catch (err) {
-        console.error("게시글 불러오기 실패", err);
-      }
-    };
-    load();
-  }, [id]);
 
   if (!post) {
     return (
@@ -102,15 +86,14 @@ export default function CommunityDetail() {
       {/* 제목 + 메타 */}
       <div className="space-y-1">
         <h1 className="text-2xl font-bold border-b border-gray-300 pb-2">
-          {postMeta?.title}
+          {post.title}
         </h1>
-
         <div className="text-[15px] text-muted-foreground flex flex-wrap gap-x-4 -mt-1 text-neutral-500">
-          <span>작성자: {postMeta?.userName ?? "알 수 없음"}</span>
-          <span>조회수: {postMeta?.watchCount ?? 0}</span>
+          <span>작성자: {post.userName ?? "알 수 없음"}</span>
+          <span>조회수: {post.watchCount ?? 0}</span>
           <span>
-            작성일: {postMeta?.createdDate
-              ? format(parseISO(postMeta.createdDate), "yyyy년 M월 d일", { locale: ko })
+            작성일: {post.createdDate
+              ? format(parseISO(post.createdDate), "yyyy년 M월 d일", { locale: ko })
               : "날짜 없음"}
           </span>
         </div>
@@ -139,24 +122,16 @@ export default function CommunityDetail() {
         </div>
       )}
 
-
-
       {/* 좋아요 / 북마크 버튼 */}
       <div className="flex gap-4 mt-6">
         <MyLikedButton
           postId={post.id}
-          initialCount={post.likeCount}
-          initiallyLiked={post.isLiked}
-          onToggle={(liked) => {
-            console.log("좋아요 상태:", liked);
-          }}
+          initialCount={post.likesCount}
+          initiallyLiked={post.likeState}
         />
         <MyBookmarkButton
           postId={post.id}
-          initialState={post.isBookmarked}
-          onToggle={(bookmarked) => {
-            console.log("북마크 상태:", bookmarked);
-          }}
+          initialState={post.bookmarkState}
         />
       </div>
 
@@ -166,11 +141,11 @@ export default function CommunityDetail() {
           <Button onClick={handleEdit} className="bg-slate-50 text-neutral-700 hover:bg-slate-100">
             수정
           </Button>
-          <Button variant="destructive" onClick={handleDelete} className="bg-slate-50 text-neutral-700  hover:bg-slate-100" >
-            비공개 전환</Button>
+          <Button variant="destructive" onClick={handleDelete} className="bg-slate-50 text-neutral-700 hover:bg-slate-100">
+            비공개 전환
+          </Button>
         </div>
       )}
-
     </div>
   );
 }
