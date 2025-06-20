@@ -1,11 +1,11 @@
-import { useUserInfo } from "../../hooks/useUserInfo";
+import { useUserInfo } from "../hooks/useUserInfo";
 import { useEffect, useState } from "react";
 import {
   getLikedPosts,
   getBookmarkedPosts,
-} from "../../API/Auth";
-import { fetchAllDiaries as fetchPosts, fetchPublicDiaryLists } from "../../API/Diary";
-import PostList from "../../components/Mypage/PostList";
+} from "../API/Auth";
+import { fetchAllDiaries as fetchPosts, fetchPublicDiaryLists } from "../API/Diary";
+import PostList from "../components/Mypage/PostList";
 
 export default function MyPage() {
   const user = useUserInfo();
@@ -17,7 +17,10 @@ export default function MyPage() {
 
   useEffect(() => {
     if (!user) return;
-    getLikedPosts().then(setLiked);
+     getLikedPosts().then((res) => {
+    console.log("💖 좋아요한 게시글 응답:", res.postLikes);
+    setLiked(res.postLikes);
+  });
     getBookmarkedPosts().then(setBookmarked);
 
     // fetchPosts 통해서 diaryId 추출 -> fetchPublicDiaryLists 불러오기
@@ -35,16 +38,16 @@ export default function MyPage() {
 
   }, [user]);
 
-  // selectedData를 항상 배열로 보장해주는 안전한 처리
-  const selectedData = (() => {
-    if (selected === "liked") {
-      return Array.isArray(liked) ? liked : liked?.data ?? [];
-    } else if (selected === "bookmark") {
-      return Array.isArray(bookmarked) ? bookmarked : bookmarked?.data ?? [];
-    } else {
-      return Array.isArray(myPublic) ? myPublic : myPublic?.data ?? [];
-    }
-  })();
+
+const selectedData = (() => {
+  if (selected === "liked") {
+    return Array.isArray(liked) ? liked : [];
+  } else if (selected === "bookmark") {
+    return Array.isArray(bookmarked?.posts) ? bookmarked.posts : [];
+  } else {
+    return Array.isArray(myPublic) ? myPublic : [];
+  }
+})();
 
 
   return (
@@ -90,18 +93,7 @@ export default function MyPage() {
                 내가 북마크 한 게시글
               </td>
             </tr>
-            <tr>
-              <td
-                onClick={() => setSelected("public")}
-                className={`py-4 border-r cursor-pointer font-gangwon text-[16px] ${selected === "public"
-                  ? "bg-slate-100 font-bold text-neutral-700"
-                  : "hover:bg-slate-50"
-                  }`}
-              >
-                내가 공개한 게시글
-              </td>
-              <td className="py-4 text-gray-300 font-gangwon">-</td>
-            </tr>
+
           </tbody>
         </table>
       </section>
@@ -120,3 +112,16 @@ export default function MyPage() {
     </div>
   );
 }
+
+//<tr>
+//              <td
+//                onClick={() => setSelected("public")}
+//                className={`py-4 border-r cursor-pointer font-gangwon text-[16px] ${selected === "public"
+//                  ? "bg-slate-100 font-bold text-neutral-700"
+//                  : "hover:bg-slate-50"
+//                  }`}
+//              >
+//                내가 공개한 게시글
+//              </td>
+//              <td className="py-4 text-gray-300 font-gangwon">-</td>
+//            </tr>

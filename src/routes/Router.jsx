@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import MainPage from "../pages/MainPage";
 import LoginPage from "../pages/LoginPage";
-import Mypage from "../pages/MyPageIns/MyPage";
+import MyPage from "../pages/MyPage";
 import DiaryPage from "../pages/Diary/DiaryPage";
 import DiaryWritePage from "../pages/Diary/DiaryWritePage";
 import DiaryViewPage from "../pages/Diary/DiaryViewPage";
@@ -16,7 +16,7 @@ export default function Router({ user, setUser }) {
     <Routes>
       <Route path="/" element={<MainPage user={user} />} />
       <Route path="/oauth2/redirect" element={<RedirectHandler />} />
-      <Route path="/mypage" element={<Mypage />} />
+      <Route path="/mypage" element={<MyPage />} />
       <Route path="/diary" element={<DiaryPage />} />
       <Route path="/diary/write" element={<DiaryWritePage />} />
       <Route path="/diary/view" element={<DiaryViewPage />} />

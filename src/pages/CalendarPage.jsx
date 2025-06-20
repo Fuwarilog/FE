@@ -7,6 +7,8 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/ui/dialog";
 import DayAddCard from "../components/Cards/DayAddCard";
 import { addEventToGoogleCalendar } from "../API/GoogleCalendar";
+import { deleteCalendarEvent } from "../API/Calendar";
+import { Button } from "../components/ui/button";
 
 export default function CalendarPage() {
   const [events, setEvents] = useState([]);
@@ -155,6 +157,16 @@ export default function CalendarPage() {
             시작: {selectedEvent?.start?.toLocaleDateString()} <br />
             종료: {selectedEvent?.end?.toLocaleDateString() || selectedEvent?.start?.toLocaleDateString()}
           </p>
+
+          <div className="absolute bottom-4 right-4">
+            <Button
+              variant="destructive"
+              onClick={() => deleteCalendarEvent(selectedEvent?.id)}
+            >
+              일정 삭제
+            </Button>
+          </div>
+          
         </DialogContent>
       </Dialog>
 

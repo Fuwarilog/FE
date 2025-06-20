@@ -39,8 +39,7 @@ export default function CommunityDetail() {
     const loadPost = async () => {
       try {
         const res = await fetchPostDetail(id);
-        console.log("📦 post detail:", res.data); 
-        setPost(res.data);
+        setPost(res);
       } catch (err) {
         console.error("게시글 불러오기 실패", err);
       }

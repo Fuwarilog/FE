@@ -14,19 +14,21 @@ export default function PostList({ posts = [] }) {
 
   return (
     <ul className="space-y-4">
-      {posts.map((post, idx) => (
+      {posts.map((post) => (
         <li
-          key={post.id ?? idx}
+          key={post.postId}
           className="p-4 border rounded-xl shadow-sm hover:shadow-md transition bg-white"
         >
           <div className="flex justify-between items-center">
             <div>
-              <h3 className="text-lg font-semibold font-gangwon"> 
-                {`${format(parseISO(post.date), "yyyy.MM.dd")}의 기록`}
-            </h3>
+              <h3 className="text-lg font-semibold font-gangwon">
+                {post.date
+                  ? `${format(parseISO(post.date), "yyyy.MM.dd")}의 기록`
+                  : `게시글 #${post.postId}`}
+              </h3>
             </div>
             <button
-              onClick={() => navigate(`/community/post/${post.id}`)}
+              onClick={() => navigate(`/community/post/${post.postId}`)}
               className="text-blue-600 hover:underline font-gangwon"
             >
               보기
@@ -34,6 +36,7 @@ export default function PostList({ posts = [] }) {
           </div>
         </li>
       ))}
+
     </ul>
   );
 }

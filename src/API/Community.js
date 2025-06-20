@@ -15,10 +15,10 @@ export const fetchPosts = async () => {
 // 게시글 상세 조회
 export const fetchPostDetail = async (postId) => {
   const url = `http://localhost:8080/api/v1/posts/${postId}`;
-  const res = await axios.get(url, {
-    withCredentials: true, // 쿠키 인증 필요 시
+  const res =  await axios.get(url, {
+    withCredentials: true, 
   });
-  return res.data;
+  return res.data?.result ?? res.data;
 };
 
 // 북마크 등록 / 취소
